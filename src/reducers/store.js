@@ -7,6 +7,7 @@ function createFigure(state = {
 
     mode: 'circle',
 
+    mouseDown: false,
     moveStartX: 0,
     moveStartY: 0
 }, action) {
@@ -32,6 +33,21 @@ function createFigure(state = {
                 });
             }
             return state;
+        }
+        case 'DELETE_FIGURE':
+        {
+            const notSelected = {};
+            Object.keys(state.figuresById)
+                .filter(f => {
+                    return state.selectedFigures.indexOf(f) === -1
+                })
+                .forEach(id => {
+                    notSelected[id] = state.figuresById[id]
+                });
+            return Object.assign({}, state, {
+                selectedFigures: [],
+                figuresById: notSelected
+            });
         }
         case 'CHANGE_FIGURE_SELECTION':
         {
@@ -84,6 +100,12 @@ function createFigure(state = {
         }
         case 'CHANGE_MODE':
             return Object.assign({}, state, {mode: action.mode});
+
+        case 'MOUSE_DOWN':
+            return Object.assign({}, state, {mouseDown: true});
+
+        case 'MOUSE_UP':
+            return Object.assign({}, state, {mouseDown: false});
 
         default:
             return state;

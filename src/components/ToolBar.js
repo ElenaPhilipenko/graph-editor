@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react'
 
-const ToolBar = ({mode, onModeClick}) => {
+const ToolBar = ({mode, onModeClick, onDelete}) => {
     return (
         <div>
             <button className="btn btn-default dropdown-toggle" type="button" onClick={() => onModeClick("circle")}>
@@ -28,13 +28,20 @@ const ToolBar = ({mode, onModeClick}) => {
             <button className="btn btn-default dropdown-toggle" type="button" onClick={() => onModeClick("select")}>
                 <span className="glyphicon glyphicon-minus">select</span>
             </button>
+            <br/>
+
+            <button className="btn btn-default dropdown-toggle" type="button" onClick={() => onDelete()}>
+                <span className="glyphicon glyphicon-minus">delete</span>
+            </button>
+
             {mode}
         </div>)
 };
 
 ToolBar.propTypes = {
     mode: PropTypes.string.isRequired,
-    onModeClick: PropTypes.func.isRequired
+    onModeClick: PropTypes.func.isRequired,
+    onDelete: PropTypes.func.isRequired
 };
 
 export default ToolBar

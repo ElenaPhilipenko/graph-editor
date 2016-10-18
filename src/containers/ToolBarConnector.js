@@ -12,6 +12,9 @@ const mapDispatchToProps = (dispatch) => {
     return {
         onModeClick: (mode) => {
             dispatch({type: 'CHANGE_MODE', mode});
+        },
+        onDelete: () => {
+            dispatch({type: 'DELETE_FIGURE'});
         }
     }
 };

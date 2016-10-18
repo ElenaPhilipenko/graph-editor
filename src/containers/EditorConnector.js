@@ -16,42 +16,56 @@ const mapStateToProps = (state) => {
         });
     return {
         figures: figures,
-        mode: state.mode
+        mode: state.mode,
+        mouseDown: state.mouseDown
     }
 };
 
 const mapDispatchToProps = (dispatch) => {
+
+    const calcCoordinates = (event)=> {
+        const canvas = document.getElementById('canvas').getBoundingClientRect();
+        return {x: event.pageX - canvas.left, y: event.pageY - canvas.top};
+    };
+
     return {
-        onFigureMouseDown: (id, x, y, mode) => {
+        onFigureMouseDown: (id, mode) => {
             if (mode === 'resize' || mode === 'move') {
                 dispatch({type: 'SELECT_FIGURE', id});
             } else if (mode === 'select') {
                 dispatch({type: 'CHANGE_FIGURE_SELECTION', id});
             }
         },
-        onEmptyCanvasClick: (id, x, y, mode) => {
-            if (figureNames.indexOf(mode) > -1) {
-                dispatch({type: 'ADD_FIGURE', x, y, id});
-            } else {
+        onEmptyCanvasClick: (event, mode) => {
+            if (event.target.localName === 'svg' && figureNames.indexOf(mode) === -1) {
                 dispatch({type: 'DESELECT_ALL_FIGURES'});
             }
         },
-        onCanvasMouseDown: (x, y, mode) => {
+        onCanvasMouseDown: (id, event, mode) => {
+            dispatch({type: 'MOUSE_DOWN'});
+            const coords = calcCoordinates(event);
             if (mode === 'resize' || mode === 'move') {
-                dispatch({type: 'START_DRAGGING', x, y});
+                dispatch({type: 'START_DRAGGING', ...coords});
+            } else if (figureNames.indexOf(mode) > -1) {
+                dispatch({type: 'ADD_FIGURE', ...coords, id});
             }
         },
-        onCanvasMouseDrag: (x, y, mode) => {
+        onCanvasMouseDrag: (event, mode, mouseDown) => {
+            if (!mouseDown) return;
+            const coords = calcCoordinates(event);
             if (mode === 'resize') {
-                dispatch({type: 'RESIZE_FIGURE', x, y});
+                dispatch({type: 'RESIZE_FIGURE', ...coords});
             } else if (mode === 'move') {
-                dispatch({type: 'MOVE_FIGURE', x, y});
+                dispatch({type: 'MOVE_FIGURE', ...coords});
             }
         },
 
         onCanvasMouseUp: (figures, mode) => {
+            dispatch({type: 'MOUSE_UP'});
             if (mode === 'move' || mode === 'resize') {
-                let selected = figures.filter(f => { return f.selected }).length;
+                let selected = figures.filter(f => {
+                    return f.selected
+                }).length;
                 if (selected === 1) {
                     dispatch({type: 'DESELECT_ALL_FIGURES'})
                 }

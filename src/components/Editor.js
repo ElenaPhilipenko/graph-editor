@@ -10,60 +10,13 @@ const canvasStyle = {
 };
 
 const Editor = React.createClass({
-
-    getInitialState: function () {
-        return {mouseDown: false};
-    },
-
-    calcCoordinates: function (event) {
-        const canvas = document.getElementById('canvas').getBoundingClientRect();
-        return [event.pageX - canvas.left, event.pageY - canvas.top];
-    },
-
-    onEmptyCanvasClick: function () {
-        return function (event) {
-            if (event.target.localName === 'svg') {
-                this.props.onEmptyCanvasClick (uuid(), ...this.calcCoordinates(event), this.props.mode);
-            }
-        }.bind(this)
-    },
-
-    onFigureMouseDown: function (id) {
-        return function (event) {
-            event.preventDefault();
-            this.props.onFigureMouseDown(id, ...this.calcCoordinates(event), this.props.mode);
-        }.bind(this)
-    },
-
-    onCanvasMouseDrag: function () {
-        return function (event) {
-            if (this.state.mouseDown) {
-                this.props.onCanvasMouseDrag(...this.calcCoordinates(event), this.props.mode);
-            }
-        }.bind(this)
-    },
-
-    onCanvasMouseUp: function () {
-        return function () {
-            this.setState({mouseDown: false});
-            this.props.onCanvasMouseUp(this.props.figures, this.props.mode);
-        }.bind(this);
-    },
-
-    onCanvasMouseDown: function () {
-        return function (event) {
-            this.props.onCanvasMouseDown(...this.calcCoordinates(event), this.props.mode);
-            this.setState({mouseDown: true});
-        }.bind(this);
-    },
-
     render: function () {
         return <div>
             <svg id="canvas" style={canvasStyle}
-                 onMouseMove={this.onCanvasMouseDrag()}
-                 onMouseUp={this.onCanvasMouseUp()}
-                 onMouseDown={this.onCanvasMouseDown()}
-                 onClick={this.onEmptyCanvasClick()}
+                 onMouseMove={(event)=>{this.props.onCanvasMouseDrag(event, this.props.mode, this.props.mouseDown)}}
+                 onMouseDown={(event)=>{this.props.onCanvasMouseDown(uuid(), event, this.props.mode)}}
+                 onMouseUp={()=>{this.props.onCanvasMouseUp(this.props.figures, this.props.mode)}}
+                 onClick={(event)=>{this.props.onEmptyCanvasClick(event)}}
             >
                 {this.props.figures.map(figure => {
                         if (figure.size > 0) {
@@ -75,7 +28,7 @@ const Editor = React.createClass({
                                                    y={figure.y}
                                                    size={figure.size}
                                                    borderColor={borderColor}
-                                                   onMouseDown={this.onFigureMouseDown(figure.id)}
+                                                   onMouseDown={()=>{this.props.onFigureMouseDown(figure.id, this.props.mode)}}
                                     />;
                                 case 'square':
                                     return <Square key={figure.id}
@@ -83,7 +36,7 @@ const Editor = React.createClass({
                                                    y={figure.y}
                                                    size={figure.size}
                                                    borderColor={borderColor}
-                                                   onMouseDown={this.onFigureMouseDown(figure.id)}
+                                                   onMouseDown={()=>{this.props.onFigureMouseDown(figure.id, this.props.mode)}}
                                     />;
                                 case 'triangle':
                                     return <Triangle key={figure.id}
@@ -91,7 +44,7 @@ const Editor = React.createClass({
                                                      y={figure.y}
                                                      size={figure.size}
                                                      borderColor={borderColor}
-                                                     onMouseDown={this.onFigureMouseDown(figure.id)}
+                                                     onMouseDown={()=>{this.props.onFigureMouseDown(figure.id, this.props.mode)}}
                                     />;
                                 default:
                                     console.log("Can not render: " + figure.type);
@@ -114,6 +67,7 @@ Editor.propTypes = {
         y: PropTypes.number.isRequired
     }).isRequired).isRequired,
     mode: PropTypes.string.isRequired,
+    mouseDown: PropTypes.bool.isRequired,
     onEmptyCanvasClick: PropTypes.func.isRequired,
     onFigureMouseDown: PropTypes.func.isRequired,
     onCanvasMouseDrag: PropTypes.func.isRequired,
