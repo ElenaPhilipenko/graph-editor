@@ -15,12 +15,18 @@ const ToolBar = ({mode, onModeClick}) => {
                 <span className="glyphicon glyphicon-minus">triangle</span>
             </button>
 
+            <br/>
+
             <button className="btn btn-default dropdown-toggle" type="button" onClick={() => onModeClick("move")}>
                 <span className="glyphicon glyphicon-minus">move</span>
             </button>
 
             <button className="btn btn-default dropdown-toggle" type="button" onClick={() => onModeClick("resize")}>
                 <span className="glyphicon glyphicon-minus">resize</span>
+            </button>
+
+            <button className="btn btn-default dropdown-toggle" type="button" onClick={() => onModeClick("select")}>
+                <span className="glyphicon glyphicon-minus">select</span>
             </button>
             {mode}
         </div>)

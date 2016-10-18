@@ -1,15 +1,15 @@
 import React, {PropTypes} from 'react'
 
-function composeCoordinates(x, y, size) { // expected format of coordinates is: 'x1,y1 x2,y2 x3,y3'
-    return x.toString().concat(
-        ',', y, ' ',
-        x - size, ',', y, ' ',
-        x, ',', y - size
-    )
-}
+const Triangle = ({x, y, size, borderColor, onMouseDown}) => {
+    function composeCoordinates(x, y, size) { // expected format of coordinates is: 'x1,y1 x2,y2 x3,y3'
+        return x.toString().concat(
+            ',', y, ' ',
+            x - size, ',', y, ' ',
+            x, ',', y - size
+        )
+    }
 
-const Triangle = ({x, y, size, onMouseDown}) => {
-    return (<polygon stroke="black" strokeWidth="2" fill="red"
+    return (<polygon stroke={borderColor} strokeWidth="2" fill="red"
                      points={composeCoordinates(x, y, size)}
                      onMouseDown={onMouseDown}
     />);

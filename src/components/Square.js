@@ -1,10 +1,10 @@
 import React, { PropTypes } from 'react'
 
-const Square = ({x, y, size, onMouseDown})=> {
+const Square = ({x, y, size, borderColor, onMouseDown})=> {
     return (
         <rect x={x-(size/2)} y={y-(size/2)} width={size} height={size}
               onMouseDown={onMouseDown}
-              stroke="black" strokeWidth="2" fill="red"/>
+              stroke={borderColor} strokeWidth="2" fill="red"/>
     )
 };
 

@@ -1,6 +1,5 @@
 import {createStore} from 'redux'
-
-let figureNames = ['circle', 'square', 'triangle'];
+import Immutable from 'immutable'
 
 function createFigure(state = {
     figuresById: {},
@@ -8,66 +7,83 @@ function createFigure(state = {
 
     mode: 'circle',
 
-    moving: false,
     moveStartX: 0,
     moveStartY: 0
 }, action) {
     switch (action.type) {
         case 'ADD_FIGURE':
-            if (figureNames.indexOf(state.mode) > -1) {
-                var newState = Object.assign({}, state);
-                newState.figuresById[action.id] = {x: action.x, y: action.y, size: 80, type: state.mode};
-                return newState;
-            }
-            return state;
+        {
+            var newState = Object.assign({}, state);
+            newState.figuresById[action.id] = {
+                x: action.x,
+                y: action.y,
+                size: 80,
+                borderColor: 'black',
+                type: state.mode
+            };
+            return newState;
+        }
         case 'SELECT_FIGURE':
-            return Object.assign({}, state, {
-                selectedFigures: [...state.selectedFigures, action.id]
-            });
-
-        case 'DESELECT_FIGURE':
-            return Object.assign({}, state, {
-                selectedFigures: []
-            });
-
-        case 'START_DRAGGING':
-            if (state.mode === 'move' || state.mode == 'resize') {
+        {
+            const index = state.selectedFigures.indexOf(action.id);
+            if (index === -1) {
                 return Object.assign({}, state, {
-                    moveStartX: action.x, moveStartY: action.y, moving: true
+                    selectedFigures: [...state.selectedFigures, action.id]
                 });
             }
             return state;
-
-        case 'END_DRAGGING':
+        }
+        case 'CHANGE_FIGURE_SELECTION':
+        {
+            const index = state.selectedFigures.indexOf(action.id);
+            if (index === -1) {
+                return Object.assign({}, state, {
+                    selectedFigures: [...state.selectedFigures, action.id]
+                });
+            } else {
+                return Object.assign({}, state, {
+                    selectedFigures: Immutable.List(state.selectedFigures).delete(index).toArray()
+                });
+            }
+        }
+        case 'DESELECT_ALL_FIGURES':
+        {
             return Object.assign({}, state, {
-                moving: false
+                selectedFigures: []
+            });
+        }
+        case 'START_DRAGGING':
+            return Object.assign({}, state, {
+                moveStartX: action.x, moveStartY: action.y
             });
 
-        case 'DRAG':
-            if (!state.moving || (state.mode !== 'move' && state.mode !== 'resize')) {
-                return state;
-            }
-            var newState = Object.assign({}, state, {moveStartX: action.x, moveStartY: action.y});
-            state.selectedFigures.forEach(id => {
+        case 'MOVE_FIGURE':
+        {
+            const newState = Object.assign({}, state, {moveStartX: action.x, moveStartY: action.y});
+            newState.selectedFigures.forEach(id => {
                 var figure = state.figuresById[id];
-                let updatedPart = state.mode === 'move' ?
-                {
+                let updatedPart = {
                     x: figure.x + (action.x - state.moveStartX),
                     y: figure.y + (action.y - state.moveStartY)
-                } :
-                {
-                    size: figure.size + (action.x - state.moveStartX)
                 };
 
                 newState.figuresById[id] = Object.assign({}, figure, updatedPart);
             });
-            return Object.assign({}, newState, {moveStartX: action.x, moveStartY: action.y});
+            return newState
+        }
+        case 'RESIZE_FIGURE':
+        {
+            const newState = Object.assign({}, state, {moveStartX: action.x, moveStartY: action.y});
+            newState.selectedFigures.forEach(id => {
+                var figure = state.figuresById[id];
+                let updatedPart = {size: figure.size + (action.x - state.moveStartX)};
 
-
-        case 'CHANGE_MODE':
-            return Object.assign({}, state, {
-                mode: action.mode
+                newState.figuresById[id] = Object.assign({}, figure, updatedPart);
             });
+            return newState
+        }
+        case 'CHANGE_MODE':
+            return Object.assign({}, state, {mode: action.mode});
 
         default:
             return state;

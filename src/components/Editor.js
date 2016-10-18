@@ -4,73 +4,101 @@ import Square from './Square'
 import Triangle from './Triangle'
 import uuid from '../uuid'
 
-let canvasStyle = {
+const canvasStyle = {
     width: "800px",
     height: "900px"
 };
 
 const Editor = React.createClass({
 
-    getCanvas: function () {
-        return document.getElementById('canvas').getBoundingClientRect()
+    getInitialState: function () {
+        return {mouseDown: false};
     },
 
-    onEmptyCanvasClick: function (action) {
+    calcCoordinates: function (event) {
+        const canvas = document.getElementById('canvas').getBoundingClientRect();
+        return [event.pageX - canvas.left, event.pageY - canvas.top];
+    },
+
+    onEmptyCanvasClick: function () {
         return function (event) {
-            action(uuid(), event.pageX - this.getCanvas().left, event.pageY - this.getCanvas().top);
+            if (event.target.localName === 'svg') {
+                this.props.onEmptyCanvasClick (uuid(), ...this.calcCoordinates(event), this.props.mode);
+            }
         }.bind(this)
     },
 
-    onFigureMouseDown: function (selectAction, id) {
+    onFigureMouseDown: function (id) {
         return function (event) {
-            selectAction(id, event.pageX - this.getCanvas().left, event.pageY - this.getCanvas().top);
+            event.preventDefault();
+            this.props.onFigureMouseDown(id, ...this.calcCoordinates(event), this.props.mode);
         }.bind(this)
     },
 
-    convertCoordsAndCall: function (moveAction) {
+    onCanvasMouseDrag: function () {
         return function (event) {
-            moveAction(event.pageX - this.getCanvas().left, event.pageY - this.getCanvas().top);
+            if (this.state.mouseDown) {
+                this.props.onCanvasMouseDrag(...this.calcCoordinates(event), this.props.mode);
+            }
         }.bind(this)
     },
 
-    componentDidMount: function () {
-        document.addEventListener("keydown", ()=> {
-            this.props.onCtrlDown();
-        }, false);
+    onCanvasMouseUp: function () {
+        return function () {
+            this.setState({mouseDown: false});
+            this.props.onCanvasMouseUp(this.props.figures, this.props.mode);
+        }.bind(this);
+    },
+
+    onCanvasMouseDown: function () {
+        return function (event) {
+            this.props.onCanvasMouseDown(...this.calcCoordinates(event), this.props.mode);
+            this.setState({mouseDown: true});
+        }.bind(this);
     },
 
     render: function () {
         return <div>
             <svg id="canvas" style={canvasStyle}
-                 onMouseMove={this.convertCoordsAndCall(this.props.onCanvasMouseMove)}
-                 onMouseUp={this.props.onCanvasMouseUp}
-                 onClick={this.onEmptyCanvasClick(this.props.onAddClick)}
+                 onMouseMove={this.onCanvasMouseDrag()}
+                 onMouseUp={this.onCanvasMouseUp()}
+                 onMouseDown={this.onCanvasMouseDown()}
+                 onClick={this.onEmptyCanvasClick()}
             >
                 {this.props.figures.map(figure => {
-                        switch (figure.type) {
-                            case 'circle':
-                                return <Circle key={figure.id}
-                                               x={figure.x}
-                                               y={figure.y}
-                                               size={figure.size}
-                                               onMouseDown={this.onFigureMouseDown(this.props.onFigureMouseDown, figure.id)}
-                                />;
-                            case 'square':
-                                return <Square key={figure.id}
-                                               x={figure.x}
-                                               y={figure.y}
-                                               size={figure.size}
-                                               onMouseDown={this.onFigureMouseDown(this.props.onFigureMouseDown, figure.id)}
-                                />;
-                            case 'triangle':
-                                return <Triangle key={figure.id}
-                                                 x={figure.x}
-                                                 y={figure.y}
-                                                 size={figure.size}
-                                                 onMouseDown={this.onFigureMouseDown(this.props.onFigureMouseDown, figure.id)}
-                                />;
-                            default:
-                                return null;
+                        if (figure.size > 0) {
+                            let borderColor = figure.selected ? 'blue' : figure.borderColor;
+                            switch (figure.type) {
+                                case 'circle':
+                                    return <Circle key={figure.id}
+                                                   x={figure.x}
+                                                   y={figure.y}
+                                                   size={figure.size}
+                                                   borderColor={borderColor}
+                                                   onMouseDown={this.onFigureMouseDown(figure.id)}
+                                    />;
+                                case 'square':
+                                    return <Square key={figure.id}
+                                                   x={figure.x}
+                                                   y={figure.y}
+                                                   size={figure.size}
+                                                   borderColor={borderColor}
+                                                   onMouseDown={this.onFigureMouseDown(figure.id)}
+                                    />;
+                                case 'triangle':
+                                    return <Triangle key={figure.id}
+                                                     x={figure.x}
+                                                     y={figure.y}
+                                                     size={figure.size}
+                                                     borderColor={borderColor}
+                                                     onMouseDown={this.onFigureMouseDown(figure.id)}
+                                    />;
+                                default:
+                                    console.log("Can not render: " + figure.type);
+                                    return null;
+                            }
+                        } else {
+                            return null;
                         }
                     }
                 )}
@@ -86,11 +114,11 @@ Editor.propTypes = {
         y: PropTypes.number.isRequired
     }).isRequired).isRequired,
     mode: PropTypes.string.isRequired,
-    onAddClick: PropTypes.func.isRequired,
+    onEmptyCanvasClick: PropTypes.func.isRequired,
     onFigureMouseDown: PropTypes.func.isRequired,
-    onCanvasMouseUp: PropTypes.func.isRequired,
-    onCtrlDown: PropTypes.func.isRequired,
-    onCanvasMouseMove: PropTypes.func.isRequired
+    onCanvasMouseDrag: PropTypes.func.isRequired,
+    onCanvasMouseDown: PropTypes.func.isRequired,
+    onCanvasMouseUp: PropTypes.func.isRequired
 };
 
 export default Editor

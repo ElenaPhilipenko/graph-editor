@@ -1,5 +1,6 @@
 import { connect } from 'react-redux'
 import ToolBar from '../components/ToolBar'
+import Immutable from 'immutable'
 
 const mapStateToProps = (state) => {
     return {
