@@ -1,5 +1,6 @@
 import {createStore} from 'redux'
 import Immutable from 'immutable'
+import equals from 'deep-equal'
 import undoable, { distinctState } from 'redux-undo'
 
 function figures(state = {
@@ -109,6 +110,16 @@ function figures(state = {
     }
 }
 
-const undoableFigures = undoable(figures, {filter: distinctState()});
+const undoableFigures = undoable(figures, {
+    filter: function filterState(action, currentState, previousHistory) {
+        if (equals(currentState, previousHistory)) {
+            return false;
+        }
+        if (action.hasOwnProperty('skip')) {
+            return !action.skip;
+        }
+        return true;
+    }
+});
 
 export default undoableFigures

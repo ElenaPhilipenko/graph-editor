@@ -3,10 +3,10 @@ import './index.css';
 import { render } from 'react-dom'
 import { Provider } from 'react-redux'
 import { createStore } from 'redux'
-import createFigure from './reducers/store'
+import figures from './reducers/store'
 import App from './App'
 
-let store = createStore(createFigure);
+let store = createStore(figures);
 
 render(
     <Provider store={store}>

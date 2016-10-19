@@ -4,10 +4,7 @@ import Editor from '../components/Editor'
 const figureNames = ['circle', 'square', 'triangle'];
 
 const mapStateToProps = (state) => {
-    const figures = Object.keys(state.present.figuresById)
-        .filter(key => {
-            return state.present.figuresById.hasOwnProperty(key)
-        })
+    const figures = Object.getOwnPropertyNames(state.present.figuresById)
         .map(key => {
             return Object.assign({}, state.present.figuresById[key],
                 {id: key, selected: state.present.selectedFigures.indexOf(key) > -1})
@@ -30,6 +27,7 @@ const mapDispatchToProps = (dispatch) => {
     };
 
     let mouseDown = false;
+    let isFirstMove = true;
 
     return {
         onFigureMouseDown: (id, mode) => {
@@ -57,14 +55,15 @@ const mapDispatchToProps = (dispatch) => {
             if (!mouseDown) return;
             const coords = calcCoordinates(event);
             if (mode === 'resize') {
-                dispatch({type: 'RESIZE_FIGURE', ...coords});
+                dispatch({type: 'RESIZE_FIGURE', ...coords, skip: !isFirstMove});
             } else if (mode === 'move') {
-                dispatch({type: 'MOVE_FIGURE', ...coords});
+                dispatch({type: 'MOVE_FIGURE', ...coords, skip: !isFirstMove});
             }
+            isFirstMove = false;
         },
-
         onCanvasMouseUp: (figures, mode) => {
             mouseDown = false;
+            isFirstMove = true;
             if (mode === 'move' || mode === 'resize') {
                 let selected = figures.filter(f => {
                     return f.selected
