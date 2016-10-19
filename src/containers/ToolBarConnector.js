@@ -1,10 +1,13 @@
 import { connect } from 'react-redux'
 import ToolBar from '../components/ToolBar'
 import Immutable from 'immutable'
+import { ActionCreators as UndoActionCreators } from 'redux-undo'
 
 const mapStateToProps = (state) => {
     return {
-        mode: state.mode
+        mode: state.present.mode,
+        canRedo: state.future.length > 0,
+        canUndo: state.past.length > 0
     }
 };
 
@@ -15,6 +18,12 @@ const mapDispatchToProps = (dispatch) => {
         },
         onDelete: () => {
             dispatch({type: 'DELETE_FIGURE'});
+        },
+        onUndo: () => {
+            dispatch(UndoActionCreators.undo())
+        },
+        onRedo: () => {
+            dispatch(UndoActionCreators.redo())
         }
     }
 };

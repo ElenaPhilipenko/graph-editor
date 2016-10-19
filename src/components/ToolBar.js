@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react'
 
-const ToolBar = ({mode, onModeClick, onDelete}) => {
+const ToolBar = ({mode, onModeClick, onDelete, onUndo, onRedo, canUndo, canRedo}) => {
     return (
         <div>
             <button className="btn btn-default dropdown-toggle" type="button" onClick={() => onModeClick("circle")}>
@@ -28,10 +28,19 @@ const ToolBar = ({mode, onModeClick, onDelete}) => {
             <button className="btn btn-default dropdown-toggle" type="button" onClick={() => onModeClick("select")}>
                 <span className="glyphicon glyphicon-minus">select</span>
             </button>
+
             <br/>
 
             <button className="btn btn-default dropdown-toggle" type="button" onClick={() => onDelete()}>
                 <span className="glyphicon glyphicon-minus">delete</span>
+            </button>
+
+            <button className="btn btn-default dropdown-toggle" type="button" disabled={!canUndo} onClick={() => onUndo()}>
+                <span className="glyphicon glyphicon-minus">undo</span>
+            </button>
+
+            <button className="btn btn-default dropdown-toggle" type="button" disabled={!canRedo} onClick={() => onRedo()}>
+                <span className="glyphicon glyphicon-minus">redo</span>
             </button>
 
             {mode}

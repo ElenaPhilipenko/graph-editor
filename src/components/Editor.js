@@ -13,10 +13,10 @@ const Editor = React.createClass({
     render: function () {
         return <div>
             <svg id="canvas" style={canvasStyle}
-                 onMouseMove={(event)=>{this.props.onCanvasMouseDrag(event, this.props.mode, this.props.mouseDown)}}
+                 onMouseMove={(event)=>{this.props.onCanvasMouseDrag(event, this.props.mode)}}
                  onMouseDown={(event)=>{this.props.onCanvasMouseDown(uuid(), event, this.props.mode)}}
                  onMouseUp={()=>{this.props.onCanvasMouseUp(this.props.figures, this.props.mode)}}
-                 onClick={(event)=>{this.props.onEmptyCanvasClick(event)}}
+                 onClick={(event)=>{this.props.onCanvasClick(event)}}
             >
                 {this.props.figures.map(figure => {
                         if (figure.size > 0) {
@@ -67,8 +67,7 @@ Editor.propTypes = {
         y: PropTypes.number.isRequired
     }).isRequired).isRequired,
     mode: PropTypes.string.isRequired,
-    mouseDown: PropTypes.bool.isRequired,
-    onEmptyCanvasClick: PropTypes.func.isRequired,
+    onCanvasClick: PropTypes.func.isRequired,
     onFigureMouseDown: PropTypes.func.isRequired,
     onCanvasMouseDrag: PropTypes.func.isRequired,
     onCanvasMouseDown: PropTypes.func.isRequired,
