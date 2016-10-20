@@ -1,17 +1,18 @@
 import React, { PropTypes } from 'react'
+import {FIGURES} from '../actions/figureActions'
 
 const ToolBar = ({mode, onModeClick, onDelete, onUndo, onRedo, canUndo, canRedo}) => {
     return (
         <div>
-            <button className="btn btn-default dropdown-toggle" type="button" onClick={() => onModeClick("circle")}>
+            <button className="btn btn-default dropdown-toggle" type="button" onClick={() => onModeClick(FIGURES.CIRCLE)}>
                 <span className="glyphicon glyphicon-minus">circle</span>
             </button>
 
-            <button className="btn btn-default dropdown-toggle" type="button" onClick={() => onModeClick("square")}>
+            <button className="btn btn-default dropdown-toggle" type="button" onClick={() => onModeClick(FIGURES.SQUARE)}>
                 <span className="glyphicon glyphicon-minus">square</span>
             </button>
 
-            <button className="btn btn-default dropdown-toggle" type="button" onClick={() => onModeClick("triangle")}>
+            <button className="btn btn-default dropdown-toggle" type="button" onClick={() => onModeClick(FIGURES.TRIANGLE)}>
                 <span className="glyphicon glyphicon-minus">triangle</span>
             </button>
 

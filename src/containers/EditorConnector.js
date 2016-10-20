@@ -1,7 +1,6 @@
 import { connect } from 'react-redux'
 import Editor from '../components/Editor'
-
-const figureNames = ['circle', 'square', 'triangle'];
+import {FIGURES, FigureActions} from '../actions/figureActions'
 
 const mapStateToProps = (state) => {
     const figures = Object.getOwnPropertyNames(state.present.figuresById)
@@ -19,7 +18,7 @@ const mapDispatchToProps = (dispatch) => {
 
     const calcCoordinates = (event)=> {
         const canvas = document.getElementById('canvas').getBoundingClientRect();
-        return {x: event.pageX - canvas.left, y: event.pageY - canvas.top};
+        return [event.pageX - canvas.left, event.pageY - canvas.top];
     };
 
     const isEmptyCanvasClick = (event)=> {
@@ -32,32 +31,32 @@ const mapDispatchToProps = (dispatch) => {
     return {
         onFigureMouseDown: (id, mode) => {
             if (mode === 'resize' || mode === 'move') {
-                dispatch({type: 'SELECT_FIGURE', id});
+                dispatch(FigureActions.selectFigure(id));
             } else if (mode === 'select') {
-                dispatch({type: 'CHANGE_FIGURE_SELECTION', id});
+                dispatch(FigureActions.changeFigureSelection(id));
             }
         },
         onCanvasClick: (event, mode) => {
-            if (isEmptyCanvasClick(event) && figureNames.indexOf(mode) === -1) {
-                dispatch({type: 'DESELECT_ALL_FIGURES'});
+            if (isEmptyCanvasClick(event) && !FIGURES.isFigure(mode)) {
+                dispatch(FigureActions.deselectAllFigures());
             }
         },
         onCanvasMouseDown: (id, event, mode) => {
             mouseDown = true;
             const coords = calcCoordinates(event);
             if (mode === 'resize' || mode === 'move') {
-                dispatch({type: 'START_DRAGGING', ...coords});
-            } else if (figureNames.indexOf(mode) > -1) {
-                dispatch({type: 'ADD_FIGURE', ...coords, id});
+                dispatch(FigureActions.startDragging(...coords));
+            } else if (FIGURES.isFigure(mode)) {
+                dispatch(FigureActions.addFigure(id, ...coords));
             }
         },
         onCanvasMouseDrag: (event, mode) => {
             if (!mouseDown) return;
             const coords = calcCoordinates(event);
             if (mode === 'resize') {
-                dispatch({type: 'RESIZE_FIGURE', ...coords, skip: !isFirstMove});
+                dispatch(FigureActions.resizeFigure(...coords, !isFirstMove));
             } else if (mode === 'move') {
-                dispatch({type: 'MOVE_FIGURE', ...coords, skip: !isFirstMove});
+                dispatch(FigureActions.moveFigure(...coords, !isFirstMove));
             }
             isFirstMove = false;
         },
@@ -69,7 +68,7 @@ const mapDispatchToProps = (dispatch) => {
                     return f.selected
                 }).length;
                 if (selected === 1) {
-                    dispatch({type: 'DESELECT_ALL_FIGURES'});
+                    dispatch(FigureActions.deselectAllFigures());
                 }
             }
         }

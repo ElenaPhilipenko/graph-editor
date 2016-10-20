@@ -3,6 +3,7 @@ import Circle from './Circle'
 import Square from './Square'
 import Triangle from './Triangle'
 import uuid from '../uuid'
+import {FIGURES} from '../actions/figureActions'
 
 const canvasStyle = {
     width: "800px",
@@ -22,7 +23,7 @@ const Editor = React.createClass({
                         if (figure.size > 0) {
                             let borderColor = figure.selected ? 'blue' : figure.borderColor;
                             switch (figure.type) {
-                                case 'circle':
+                                case FIGURES.CIRCLE:
                                     return <Circle key={figure.id}
                                                    x={figure.x}
                                                    y={figure.y}
@@ -30,7 +31,7 @@ const Editor = React.createClass({
                                                    borderColor={borderColor}
                                                    onMouseDown={()=>{this.props.onFigureMouseDown(figure.id, this.props.mode)}}
                                     />;
-                                case 'square':
+                                case FIGURES.SQUARE:
                                     return <Square key={figure.id}
                                                    x={figure.x}
                                                    y={figure.y}
@@ -38,7 +39,7 @@ const Editor = React.createClass({
                                                    borderColor={borderColor}
                                                    onMouseDown={()=>{this.props.onFigureMouseDown(figure.id, this.props.mode)}}
                                     />;
-                                case 'triangle':
+                                case FIGURES.TRIANGLE:
                                     return <Triangle key={figure.id}
                                                      x={figure.x}
                                                      y={figure.y}

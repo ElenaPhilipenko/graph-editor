@@ -1,7 +1,7 @@
 import { connect } from 'react-redux'
 import ToolBar from '../components/ToolBar'
-import Immutable from 'immutable'
 import { ActionCreators as UndoActionCreators } from 'redux-undo'
+import {FigureActions, changeMode} from '../actions/figureActions'
 
 const mapStateToProps = (state) => {
     return {
@@ -14,10 +14,10 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
     return {
         onModeClick: (mode) => {
-            dispatch({type: 'CHANGE_MODE', mode});
+            dispatch(changeMode(mode));
         },
         onDelete: () => {
-            dispatch({type: 'DELETE_FIGURE'});
+            dispatch(FigureActions.deleteFigure());
         },
         onUndo: () => {
             dispatch(UndoActionCreators.undo())

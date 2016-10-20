@@ -1,19 +1,20 @@
-import {createStore} from 'redux'
 import Immutable from 'immutable'
 import equals from 'deep-equal'
-import undoable, { distinctState } from 'redux-undo'
+import undoable from 'redux-undo'
+import {SELECT_FIGURE, CHANGE_FIGURE_SELECTION, DELETE_FIGURE, DESELECT_ALL_FIGURES,
+START_DRAGGING, ADD_FIGURE, MOVE_FIGURE, RESIZE_FIGURE, CHANGE_MODE, FIGURES } from '../actions/figureActions'
 
 function figures(state = {
     figuresById: {},
     selectedFigures: [],
 
-    mode: 'circle',
+    mode: FIGURES.CIRCLE,
 
     moveStartX: 0,
     moveStartY: 0
 }, action) {
     switch (action.type) {
-        case 'ADD_FIGURE':
+        case ADD_FIGURE:
         {
             let newFigure = Immutable.Map(state.figuresById).set(action.id, {
                 x: action.x,
@@ -24,7 +25,7 @@ function figures(state = {
             }).toJS();
             return Object.assign({}, state, {figuresById: newFigure});
         }
-        case 'SELECT_FIGURE':
+        case SELECT_FIGURE:
         {
             const index = state.selectedFigures.indexOf(action.id);
             if (index === -1) {
@@ -32,7 +33,7 @@ function figures(state = {
             }
             return state;
         }
-        case 'DELETE_FIGURE':
+        case DELETE_FIGURE:
         {
             const notSelected = {};
             Object.keys(state.figuresById)
@@ -47,7 +48,7 @@ function figures(state = {
                 figuresById: notSelected
             });
         }
-        case 'CHANGE_FIGURE_SELECTION':
+        case CHANGE_FIGURE_SELECTION:
         {
             const index = state.selectedFigures.indexOf(action.id);
             if (index === -1) {
@@ -60,18 +61,18 @@ function figures(state = {
                 });
             }
         }
-        case 'DESELECT_ALL_FIGURES':
+        case DESELECT_ALL_FIGURES:
         {
             return Object.assign({}, state, {
                 selectedFigures: []
             });
         }
-        case 'START_DRAGGING':
+        case START_DRAGGING:
             return Object.assign({}, state, {
                 moveStartX: action.x, moveStartY: action.y
             });
 
-        case 'MOVE_FIGURE':
+        case MOVE_FIGURE:
         {
             let moved = Immutable.fromJS(state.figuresById);
             Object.keys(state.figuresById).forEach(id => {
@@ -87,7 +88,7 @@ function figures(state = {
                 figuresById: moved.toJS()
             });
         }
-        case 'RESIZE_FIGURE':
+        case RESIZE_FIGURE:
         {
             let resized = Immutable.fromJS(state.figuresById);
             Object.keys(state.figuresById).forEach(id => {
@@ -102,7 +103,7 @@ function figures(state = {
                 figuresById: resized.toJS()
             });
         }
-        case 'CHANGE_MODE':
+        case CHANGE_MODE:
             return Object.assign({}, state, {mode: action.mode});
 
         default:
