@@ -76,7 +76,7 @@ function figures(state = {
         {
             let moved = Immutable.fromJS(state.figuresById);
             Object.keys(state.figuresById).forEach(id => {
-                var figure = state.figuresById[id];
+                const figure = state.figuresById[id];
                 if (state.selectedFigures.indexOf(id) > -1) {
                     moved = moved.setIn([id, 'x'], figure.x + (action.x - state.moveStartX));
                     moved = moved.setIn([id, 'y'], figure.y + (action.y - state.moveStartY));
@@ -92,7 +92,7 @@ function figures(state = {
         {
             let resized = Immutable.fromJS(state.figuresById);
             Object.keys(state.figuresById).forEach(id => {
-                var figure = state.figuresById[id];
+                const figure = state.figuresById[id];
                 if (state.selectedFigures.indexOf(id) > -1) {
                     resized = resized.setIn([id, 'size'], figure.size + (action.x - state.moveStartX));
                 }
@@ -112,7 +112,7 @@ function figures(state = {
 }
 
 const undoableFigures = undoable(figures, {
-    filter: function filterState(action, currentState, previousHistory) {
+    filter (action, currentState, previousHistory) {
         if (equals(currentState, previousHistory)) {
             return false;
         }

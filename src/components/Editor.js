@@ -11,7 +11,7 @@ const canvasStyle = {
 };
 
 const Editor = React.createClass({
-    render: function () {
+    render () {
         return <div>
             <svg id="canvas" style={canvasStyle}
                  onMouseMove={(event)=>{this.props.onCanvasMouseDrag(event, this.props.mode)}}
