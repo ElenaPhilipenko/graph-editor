@@ -1,8 +1,8 @@
 import Immutable from 'immutable'
-import equals from 'deep-equal'
 import undoable from 'redux-undo'
 import {SELECT_FIGURE, CHANGE_FIGURE_SELECTION, DELETE_FIGURE, DESELECT_ALL_FIGURES,
 START_DRAGGING, ADD_FIGURE, MOVE_FIGURE, RESIZE_FIGURE, CHANGE_MODE, FIGURES } from '../actions/figureActions'
+import filter from './actionUndoFilter'
 
 function figures(state = {
     figuresById: {},
@@ -111,16 +111,5 @@ function figures(state = {
     }
 }
 
-const undoableFigures = undoable(figures, {
-    filter (action, currentState, previousHistory) {
-        if (equals(currentState, previousHistory)) {
-            return false;
-        }
-        if (action.hasOwnProperty('skip')) {
-            return !action.skip;
-        }
-        return true;
-    }
-});
-
+const undoableFigures = undoable(figures, {filter});
 export default undoableFigures

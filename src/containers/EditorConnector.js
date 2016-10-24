@@ -14,11 +14,11 @@ const mapStateToProps = (state) => {
     }
 };
 
-const mapDispatchToProps = (dispatch) => {
+export const mapDispatchToProps = (dispatch) => {
 
     const calcCoordinates = (event)=> {
         const canvas = document.getElementById('canvas').getBoundingClientRect();
-        return [event.pageX - canvas.left, event.pageY - canvas.top];
+        return [event.pageX - canvas.left||0, event.pageY - canvas.top||0];
     };
 
     const isEmptyCanvasClick = (event)=> {

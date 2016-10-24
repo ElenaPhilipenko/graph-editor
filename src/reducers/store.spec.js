@@ -7,8 +7,8 @@ function createSquare(x = 1, y = 1, size = 80) {
 
 let state = {};
 
-beforeEach(()=> {
-    state = {
+function createEmptyState() {
+    return {
         future: [],
         past: [],
         present: {
@@ -19,6 +19,10 @@ beforeEach(()=> {
             moveStartY: 0
         }
     }
+}
+
+beforeEach(()=> {
+    state = createEmptyState();
 });
 
 it('should  add a square', () => {
@@ -114,7 +118,6 @@ it('should change selection of a selected figure', ()=> {
 
     expect(result.present.selectedFigures.indexOf("1")).toBe(-1);
 });
-
 
 
 
