@@ -82,6 +82,9 @@ export const mapDispatchToProps = (dispatch) => {
         },
         onCommandUp() {
             dispatch(changeMode(prevMode))
+        },
+        onDelete(){
+            dispatch(FigureActions.deleteFigure());
         }
     }
 };

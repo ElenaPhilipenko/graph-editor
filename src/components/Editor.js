@@ -11,12 +11,16 @@ const canvasStyle = {
 };
 
 const cmdCode = 91;
+const del = 46;
+const back = 8;
 
 const Editor = React.createClass({
     componentDidMount() {
         document.addEventListener('keydown', (event)=> {
             if (event.keyCode === cmdCode) {
                 this.props.onCommandPressed(this.props.mode);
+            } else if (event.keyCode === del || event.keyCode === back) {
+                this.props.onDelete();
             }
         });
 
@@ -96,7 +100,8 @@ Editor.propTypes = {
     onCanvasMouseDown: PropTypes.func.isRequired,
     onCanvasMouseUp: PropTypes.func.isRequired,
     onCommandPressed: PropTypes.func.isRequired,
-    onCommandUp: PropTypes.func.isRequired
+    onCommandUp: PropTypes.func.isRequired,
+    onDelete: PropTypes.func.isRequired
 };
 
 export default Editor
