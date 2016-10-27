@@ -39,9 +39,8 @@ export const mapDispatchToProps = (dispatch) => {
                 dispatch(FigureActions.changeFigureSelection(id));
             } else {
                 dispatch(FigureActions.startDragging(...calcCoordinates(event)));
-                if (isSelectedFigure(id, figures)) {
-                    dispatch(changeMode('move'));
-                } else  {
+                dispatch(changeMode('move'));
+                if (!isSelectedFigure(id, figures)) {
                     dispatch(FigureActions.deselectAllFigures());
                     dispatch(FigureActions.changeFigureSelection(id));
                 }

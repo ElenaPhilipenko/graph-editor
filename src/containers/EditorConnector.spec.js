@@ -34,6 +34,13 @@ it('should deselect all selected figures on mouse down on the not selected figur
     expect(dispatchMock.mock.calls.map(a => a[0].type)).toContain(DESELECT_ALL_FIGURES);
 });
 
+it('should set move mode on mouse down on the a figure', ()=> {
+    mapDispatch.onFigureMouseDown('1', createMouseEventWithCoords(), 'move', [{id: '1', selected: false}]);
+
+    expect(dispatchMock.mock.calls.map(a => a[0].type)).toContain(CHANGE_MODE);
+    expect(dispatchMock.mock.calls.map(a => a[0].mode)).toContain('move');
+});
+
 it('should not deselect all selected figures on mouse down on the selected figure', ()=> {
     mapDispatch.onFigureMouseDown('1', createMouseEventWithCoords(), 'move', [{id: '1', selected: true}]);
 
