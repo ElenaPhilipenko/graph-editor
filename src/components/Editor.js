@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react'
-import Circle from './Circle'
-import Square from './Square'
-import Triangle from './Triangle'
+import Circle from './figures/Circle'
+import Square from './figures/Square'
+import Triangle from './figures/Triangle'
 import uuid from '../uuid'
 import {FIGURES} from '../actions/figureActions'
 
@@ -16,8 +16,7 @@ const Editor = React.createClass({
             <svg id="canvas" style={canvasStyle}
                  onMouseMove={(event)=>{this.props.onCanvasMouseDrag(event, this.props.mode)}}
                  onMouseDown={(event)=>{this.props.onCanvasMouseDown(uuid(), event, this.props.mode)}}
-                 onMouseUp={()=>{this.props.onCanvasMouseUp(this.props.figures, this.props.mode)}}
-                 onClick={(event)=>{this.props.onCanvasClick(event)}}
+                 onMouseUp={()=>{this.props.onCanvasMouseUp()}}
             >
                 {this.props.figures.map(figure => {
                         if (figure.size > 0) {
@@ -29,7 +28,10 @@ const Editor = React.createClass({
                                                    y={figure.y}
                                                    size={figure.size}
                                                    borderColor={borderColor}
-                                                   onMouseDown={()=>{this.props.onFigureMouseDown(figure.id, this.props.mode)}}
+                                                   selected={figure.selected}
+                                                   onMouseDown={(event)=>{this.props.onFigureMouseDown(figure.id, event)}}
+                                                   onResize={(event) => {this.props.onResizeToolMouseDown(event)}}
+
                                     />;
                                 case FIGURES.SQUARE:
                                     return <Square key={figure.id}
@@ -37,7 +39,9 @@ const Editor = React.createClass({
                                                    y={figure.y}
                                                    size={figure.size}
                                                    borderColor={borderColor}
-                                                   onMouseDown={()=>{this.props.onFigureMouseDown(figure.id, this.props.mode)}}
+                                                   selected={figure.selected}
+                                                   onMouseDown={(event)=>{this.props.onFigureMouseDown(figure.id, event)}}
+                                                   onResize={(event) => {this.props.onResizeToolMouseDown(event)}}
                                     />;
                                 case FIGURES.TRIANGLE:
                                     return <Triangle key={figure.id}
@@ -45,7 +49,9 @@ const Editor = React.createClass({
                                                      y={figure.y}
                                                      size={figure.size}
                                                      borderColor={borderColor}
-                                                     onMouseDown={()=>{this.props.onFigureMouseDown(figure.id, this.props.mode)}}
+                                                     selected={figure.selected}
+                                                     onMouseDown={(event)=>{this.props.onFigureMouseDown(figure.id, event)}}
+                                                     onResize={(event) => {this.props.onResizeToolMouseDown(event)}}
                                     />;
                                 default:
                                     console.log("Can not render: " + figure.type);
@@ -68,8 +74,8 @@ Editor.propTypes = {
         y: PropTypes.number.isRequired
     }).isRequired).isRequired,
     mode: PropTypes.string.isRequired,
-    onCanvasClick: PropTypes.func.isRequired,
     onFigureMouseDown: PropTypes.func.isRequired,
+    onResizeToolMouseDown: PropTypes.func.isRequired,
     onCanvasMouseDrag: PropTypes.func.isRequired,
     onCanvasMouseDown: PropTypes.func.isRequired,
     onCanvasMouseUp: PropTypes.func.isRequired

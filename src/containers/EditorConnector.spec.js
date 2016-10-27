@@ -1,6 +1,6 @@
 import {mapDispatchToProps} from './EditorConnector'
 import {FIGURES, SELECT_FIGURE, DESELECT_ALL_FIGURES, ADD_FIGURE, START_DRAGGING,
-MOVE_FIGURE, RESIZE_FIGURE} from '../actions/figureActions'
+    MOVE_FIGURE, RESIZE_FIGURE, CHANGE_FIGURE_SELECTION, CHANGE_MODE} from '../actions/figureActions'
 
 let mapDispatch = {};
 let dispatchMock = jest.fn();
@@ -8,7 +8,8 @@ let dispatchMock = jest.fn();
 function createMouseEventWithCoords(x = 1, y = 22) {
     return {
         pageX: x,
-        pageY: y
+        pageY: y,
+        target: {localName: 'svg'}
     }
 }
 
@@ -27,45 +28,20 @@ it('should create figure on figure mode', ()=> {
     expect(dispatchMock.mock.calls[0][0].type).toBe(ADD_FIGURE);
 });
 
-it('should select a figure on mouse down on the figure', ()=> {
-    mapDispatch.onFigureMouseDown('1', 'move');
-
-    expect(dispatchMock.mock.calls[0][0].type).toBe(SELECT_FIGURE);
-    expect(dispatchMock.mock.calls[0][0].id).toBe('1');
-});
-
-it('should start dragging on mouse down on canvas on move mode', ()=> {
-    mapDispatch.onCanvasMouseDown('1', createMouseEventWithCoords(), 'move');
-
-    expect(dispatchMock.mock.calls[0][0].type).toBe(START_DRAGGING);
-});
-
-it('should start dragging on mouse down on canvas on resize mode', ()=> {
-    mapDispatch.onCanvasMouseDown('1', createMouseEventWithCoords(), 'resize');
-
-    expect(dispatchMock.mock.calls[0][0].type).toBe(START_DRAGGING);
-});
-
-it('should deselect all figures on mouse click on empty canvas', ()=> {
-    const emptyCanvasClick = {target: {localName: 'svg'}};
-
-    mapDispatch.onCanvasClick(emptyCanvasClick, 'move');
+it('should deselect all selected figures on mouse down on the figure', ()=> {
+    mapDispatch.onFigureMouseDown('1', createMouseEventWithCoords());
 
     expect(dispatchMock.mock.calls[0][0].type).toBe(DESELECT_ALL_FIGURES);
 });
 
-it('should do nothing on mouse click on figure', ()=> {
-    const emptyCanvasClick = {target: {localName: 'circle'}};
+it('should select the figure on mouse down on the figure', ()=> {
+    mapDispatch.onFigureMouseDown('1', createMouseEventWithCoords());
 
-    mapDispatch.onCanvasClick(emptyCanvasClick, 'move');
-
-    expect(dispatchMock.mock.calls.length).toBe(0);
+    expect(dispatchMock.mock.calls[3][0].type).toBe(CHANGE_FIGURE_SELECTION);
 });
 
-it('should deselect a figure after finish moving', ()=> {
-    const movingFigures = [{id: '1', selected: true}];
-
-    mapDispatch.onCanvasMouseUp(movingFigures, 'move');
+it('should deselect all figures on mouse down on empty canvas on not figure mode', ()=> {
+    mapDispatch.onCanvasMouseDown('1', createMouseEventWithCoords(), 'resize');
 
     expect(dispatchMock.mock.calls[0][0].type).toBe(DESELECT_ALL_FIGURES);
 });
@@ -102,5 +78,18 @@ it('should resize figure on mouse drag on resize mode', ()=> {
     mapDispatch.onCanvasMouseDrag(createMouseEventWithCoords(), 'resize');
 
     expect(dispatchMock.mock.calls[0][0].type).toBe(RESIZE_FIGURE);
+});
+
+it('should set resize mode on mouse down on resize tool', ()=> {
+    mapDispatch.onResizeToolMouseDown(createMouseEventWithCoords());
+
+    expect(dispatchMock.mock.calls[0][0].type).toBe(CHANGE_MODE);
+    expect(dispatchMock.mock.calls[0][0].mode).toBe('resize');
+});
+
+it('should start dragging on mouse down on resize tool', ()=> {
+    mapDispatch.onResizeToolMouseDown(createMouseEventWithCoords());
+
+    expect(dispatchMock.mock.calls[1][0].type).toBe(START_DRAGGING);
 });
 

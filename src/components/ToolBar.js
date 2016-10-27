@@ -5,43 +5,31 @@ const ToolBar = ({mode, onModeClick, onDelete, onUndo, onRedo, canUndo, canRedo}
     return (
         <div>
             <button className="btn btn-default dropdown-toggle" type="button" onClick={() => onModeClick(FIGURES.CIRCLE)}>
-                <span className="glyphicon glyphicon-minus">circle</span>
+                <span className="glyphicon glyphicon-plus-sign"></span>
             </button>
 
             <button className="btn btn-default dropdown-toggle" type="button" onClick={() => onModeClick(FIGURES.SQUARE)}>
-                <span className="glyphicon glyphicon-minus">square</span>
+                <span className="glyphicon glyphicon-stop"></span>
             </button>
 
             <button className="btn btn-default dropdown-toggle" type="button" onClick={() => onModeClick(FIGURES.TRIANGLE)}>
-                <span className="glyphicon glyphicon-minus">triangle</span>
-            </button>
-
-            <br/>
-
-            <button className="btn btn-default dropdown-toggle" type="button" onClick={() => onModeClick("move")}>
-                <span className="glyphicon glyphicon-minus">move</span>
-            </button>
-
-            <button className="btn btn-default dropdown-toggle" type="button" onClick={() => onModeClick("resize")}>
-                <span className="glyphicon glyphicon-minus">resize</span>
+                <span className="glyphicon glyphicon-play"></span>
             </button>
 
             <button className="btn btn-default dropdown-toggle" type="button" onClick={() => onModeClick("select")}>
-                <span className="glyphicon glyphicon-minus">select</span>
+                <span>select</span>
             </button>
 
-            <br/>
-
             <button className="btn btn-default dropdown-toggle" type="button" onClick={() => onDelete()}>
-                <span className="glyphicon glyphicon-minus">delete</span>
+                <span>delete</span>
             </button>
 
             <button className="btn btn-default dropdown-toggle" type="button" disabled={!canUndo} onClick={() => onUndo()}>
-                <span className="glyphicon glyphicon-minus">undo</span>
+                <span className="glyphicon glyphicon-menu-left"></span>
             </button>
 
             <button className="btn btn-default dropdown-toggle" type="button" disabled={!canRedo} onClick={() => onRedo()}>
-                <span className="glyphicon glyphicon-minus">redo</span>
+                <span className="glyphicon glyphicon-menu-right"></span>
             </button>
 
             {mode}

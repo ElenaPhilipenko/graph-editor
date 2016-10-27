@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import Editor from '../components/Editor'
-import {FIGURES, FigureActions} from '../actions/figureActions'
+import {FIGURES, FigureActions, changeMode} from '../actions/figureActions'
 
 const mapStateToProps = (state) => {
     const figures = Object.getOwnPropertyNames(state.present.figuresById)
@@ -18,7 +18,7 @@ export const mapDispatchToProps = (dispatch) => {
 
     const calcCoordinates = (event)=> {
         const canvas = document.getElementById('canvas').getBoundingClientRect();
-        return [event.pageX - canvas.left||0, event.pageY - canvas.top||0];
+        return [event.pageX - canvas.left || 0, event.pageY - canvas.top || 0];
     };
 
     const isEmptyCanvasClick = (event)=> {
@@ -29,25 +29,25 @@ export const mapDispatchToProps = (dispatch) => {
     let isFirstMove = true;
 
     return {
-        onFigureMouseDown: (id, mode) => {
-            if (mode === 'resize' || mode === 'move') {
-                dispatch(FigureActions.selectFigure(id));
-            } else if (mode === 'select') {
-                dispatch(FigureActions.changeFigureSelection(id));
-            }
+        onFigureMouseDown: (id, event) => {
+            dispatch(FigureActions.deselectAllFigures());
+            dispatch(changeMode('move'));
+            dispatch(FigureActions.startDragging(...calcCoordinates(event)));
+            dispatch(FigureActions.changeFigureSelection(id));
         },
-        onCanvasClick: (event, mode) => {
-            if (isEmptyCanvasClick(event) && !FIGURES.isFigure(mode)) {
-                dispatch(FigureActions.deselectAllFigures());
-            }
+        onResizeToolMouseDown: (event) => {
+            dispatch(changeMode('resize'));
+            dispatch(FigureActions.startDragging(...calcCoordinates(event)));
         },
         onCanvasMouseDown: (id, event, mode) => {
             mouseDown = true;
             const coords = calcCoordinates(event);
-            if (mode === 'resize' || mode === 'move') {
-                dispatch(FigureActions.startDragging(...coords));
-            } else if (FIGURES.isFigure(mode)) {
-                dispatch(FigureActions.addFigure(id, ...coords));
+            if (isEmptyCanvasClick(event)) {
+                if (FIGURES.isFigure(mode)) {
+                    dispatch(FigureActions.addFigure(id, ...coords));
+                } else {
+                    dispatch(FigureActions.deselectAllFigures());
+                }
             }
         },
         onCanvasMouseDrag: (event, mode) => {
@@ -60,17 +60,9 @@ export const mapDispatchToProps = (dispatch) => {
             }
             isFirstMove = false;
         },
-        onCanvasMouseUp: (figures, mode) => {
+        onCanvasMouseUp: () => {
             mouseDown = false;
             isFirstMove = true;
-            if (mode === 'move' || mode === 'resize') {
-                let selected = figures.filter(f => {
-                    return f.selected
-                }).length;
-                if (selected === 1) {
-                    dispatch(FigureActions.deselectAllFigures());
-                }
-            }
         }
     }
 };
