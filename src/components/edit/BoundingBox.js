@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react'
-import ResizeSquareTool from './ResizeSquareTool'
+import ResizeTool from './ResizeTool'
 import MiddlePointCircle from './MiddlePointCircle'
 
 
@@ -32,7 +32,7 @@ const BoundingBox = ({x, y, length, onResize})=> {
             <MiddlePointCircle x={x} y={y+length/2}/>
             <MiddlePointCircle x={x+length/2} y={y+length}/>
 
-            <ResizeSquareTool x={x+length} y={y+length} onMouseDown={onResize}/>
+            <ResizeTool x={x+length} y={y+length} onMouseDown={onResize}/>
         </g>
     )
 };

@@ -10,7 +10,23 @@ const canvasStyle = {
     height: "900px"
 };
 
+const cmdCode = 91;
+
 const Editor = React.createClass({
+    componentDidMount() {
+        document.addEventListener('keydown', (event)=> {
+            if (event.keyCode === cmdCode) {
+                this.props.onCommandPressed(this.props.mode);
+            }
+        });
+
+        document.addEventListener('keyup', (event)=> {
+            if (event.keyCode === cmdCode) {
+                this.props.onCommandUp();
+            }
+        });
+    },
+
     render () {
         return <div>
             <svg id="canvas" style={canvasStyle}
@@ -29,7 +45,7 @@ const Editor = React.createClass({
                                                    size={figure.size}
                                                    borderColor={borderColor}
                                                    selected={figure.selected}
-                                                   onMouseDown={(event)=>{this.props.onFigureMouseDown(figure.id, event)}}
+                                                   onMouseDown={(event)=>{this.props.onFigureMouseDown(figure.id, event, this.props.mode, this.props.figures)}}
                                                    onResize={(event) => {this.props.onResizeToolMouseDown(event)}}
 
                                     />;
@@ -40,7 +56,7 @@ const Editor = React.createClass({
                                                    size={figure.size}
                                                    borderColor={borderColor}
                                                    selected={figure.selected}
-                                                   onMouseDown={(event)=>{this.props.onFigureMouseDown(figure.id, event)}}
+                                                   onMouseDown={(event)=>{this.props.onFigureMouseDown(figure.id, event, this.props.mode, this.props.figures)}}
                                                    onResize={(event) => {this.props.onResizeToolMouseDown(event)}}
                                     />;
                                 case FIGURES.TRIANGLE:
@@ -50,7 +66,7 @@ const Editor = React.createClass({
                                                      size={figure.size}
                                                      borderColor={borderColor}
                                                      selected={figure.selected}
-                                                     onMouseDown={(event)=>{this.props.onFigureMouseDown(figure.id, event)}}
+                                                     onMouseDown={(event)=>{this.props.onFigureMouseDown(figure.id, event, this.props.mode, this.props.figures)}}
                                                      onResize={(event) => {this.props.onResizeToolMouseDown(event)}}
                                     />;
                                 default:
@@ -78,7 +94,9 @@ Editor.propTypes = {
     onResizeToolMouseDown: PropTypes.func.isRequired,
     onCanvasMouseDrag: PropTypes.func.isRequired,
     onCanvasMouseDown: PropTypes.func.isRequired,
-    onCanvasMouseUp: PropTypes.func.isRequired
+    onCanvasMouseUp: PropTypes.func.isRequired,
+    onCommandPressed: PropTypes.func.isRequired,
+    onCommandUp: PropTypes.func.isRequired
 };
 
 export default Editor

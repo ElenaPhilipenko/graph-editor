@@ -28,16 +28,22 @@ it('should create figure on figure mode', ()=> {
     expect(dispatchMock.mock.calls[0][0].type).toBe(ADD_FIGURE);
 });
 
-it('should deselect all selected figures on mouse down on the figure', ()=> {
-    mapDispatch.onFigureMouseDown('1', createMouseEventWithCoords());
+it('should deselect all selected figures on mouse down on the not selected figure', ()=> {
+    mapDispatch.onFigureMouseDown('1', createMouseEventWithCoords(), 'move', [{id: '1', selected: false}]);
 
-    expect(dispatchMock.mock.calls[0][0].type).toBe(DESELECT_ALL_FIGURES);
+    expect(dispatchMock.mock.calls.map(a => a[0].type)).toContain(DESELECT_ALL_FIGURES);
+});
+
+it('should not deselect all selected figures on mouse down on the selected figure', ()=> {
+    mapDispatch.onFigureMouseDown('1', createMouseEventWithCoords(), 'move', [{id: '1', selected: true}]);
+
+    expect(dispatchMock.mock.calls.map(a => a[0].type)).not.toContain(DESELECT_ALL_FIGURES);
 });
 
 it('should select the figure on mouse down on the figure', ()=> {
-    mapDispatch.onFigureMouseDown('1', createMouseEventWithCoords());
+    mapDispatch.onFigureMouseDown('1', createMouseEventWithCoords(), 'move', [{id: '1', selected: false}]);
 
-    expect(dispatchMock.mock.calls[3][0].type).toBe(CHANGE_FIGURE_SELECTION);
+    expect(dispatchMock.mock.calls.map(a => a[0].type)).toContain(CHANGE_FIGURE_SELECTION);
 });
 
 it('should deselect all figures on mouse down on empty canvas on not figure mode', ()=> {
@@ -55,7 +61,7 @@ it('should do nothing after finish moving group of figures', ()=> {
     expect(dispatchMock.mock.calls.length).toBe(0);
 });
 
-it('should do nothing on mouse move', ()=> {
+it('should do nothing on mouse move', () => {
 
     mapDispatch.onCanvasMouseDrag(createMouseEventWithCoords(), 'move');
 
@@ -90,6 +96,6 @@ it('should set resize mode on mouse down on resize tool', ()=> {
 it('should start dragging on mouse down on resize tool', ()=> {
     mapDispatch.onResizeToolMouseDown(createMouseEventWithCoords());
 
-    expect(dispatchMock.mock.calls[1][0].type).toBe(START_DRAGGING);
+    expect(dispatchMock.mock.calls.map(a => a[0].type)).toContain(START_DRAGGING);
 });
 

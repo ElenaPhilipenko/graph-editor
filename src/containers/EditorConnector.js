@@ -25,21 +25,33 @@ export const mapDispatchToProps = (dispatch) => {
         return event.target.localName === 'svg';
     };
 
+    const isSelectedFigure = (id, figures)=> {
+        return figures.filter(f => f.id === id)[0].selected;
+    };
+
     let mouseDown = false;
     let isFirstMove = true;
+    let prevMode = 'move';
 
     return {
-        onFigureMouseDown: (id, event) => {
-            dispatch(FigureActions.deselectAllFigures());
-            dispatch(changeMode('move'));
-            dispatch(FigureActions.startDragging(...calcCoordinates(event)));
-            dispatch(FigureActions.changeFigureSelection(id));
+        onFigureMouseDown (id, event, mode, figures) {
+            if (mode === 'select') {
+                dispatch(FigureActions.changeFigureSelection(id));
+            } else {
+                dispatch(FigureActions.startDragging(...calcCoordinates(event)));
+                if (isSelectedFigure(id, figures)) {
+                    dispatch(changeMode('move'));
+                } else  {
+                    dispatch(FigureActions.deselectAllFigures());
+                    dispatch(FigureActions.changeFigureSelection(id));
+                }
+            }
         },
-        onResizeToolMouseDown: (event) => {
+        onResizeToolMouseDown (event) {
             dispatch(changeMode('resize'));
             dispatch(FigureActions.startDragging(...calcCoordinates(event)));
         },
-        onCanvasMouseDown: (id, event, mode) => {
+        onCanvasMouseDown (id, event, mode) {
             mouseDown = true;
             const coords = calcCoordinates(event);
             if (isEmptyCanvasClick(event)) {
@@ -50,7 +62,7 @@ export const mapDispatchToProps = (dispatch) => {
                 }
             }
         },
-        onCanvasMouseDrag: (event, mode) => {
+        onCanvasMouseDrag (event, mode) {
             if (!mouseDown) return;
             const coords = calcCoordinates(event);
             if (mode === 'resize') {
@@ -60,9 +72,16 @@ export const mapDispatchToProps = (dispatch) => {
             }
             isFirstMove = false;
         },
-        onCanvasMouseUp: () => {
+        onCanvasMouseUp () {
             mouseDown = false;
             isFirstMove = true;
+        },
+        onCommandPressed(mode) {
+            prevMode = mode;
+            dispatch(changeMode('select'))
+        },
+        onCommandUp() {
+            dispatch(changeMode(prevMode))
         }
     }
 };
