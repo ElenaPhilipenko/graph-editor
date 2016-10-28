@@ -18,7 +18,8 @@ export const mapDispatchToProps = (dispatch) => {
 
     const calcCoordinates = (event)=> {
         const canvas = document.getElementById('canvas').getBoundingClientRect();
-        return [event.pageX - canvas.left || 0, event.pageY - canvas.top || 0];
+        return [event.pageX - canvas.left - window.pageXOffset || 0,
+            event.pageY - canvas.top - window.pageYOffset || 0];
     };
 
     const isEmptyCanvasClick = (event)=> {
