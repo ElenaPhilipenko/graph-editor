@@ -1,6 +1,7 @@
 import React, { PropTypes } from 'react'
 import Circle from './figures/Circle'
 import Square from './figures/Square'
+import Line from './figures/Line'
 import Triangle from './figures/Triangle'
 import Grid from './edit/Grid'
 import uuid from '../uuid'
@@ -68,6 +69,17 @@ const Editor = React.createClass({
                                     />;
                                 case FIGURES.TRIANGLE:
                                     return <Triangle key={figure.id}
+                                                     x={figure.x}
+                                                     y={figure.y}
+                                                     size={figure.size}
+                                                     borderColor={borderColor}
+                                                     selected={figure.selected}
+                                                     onMouseDown={(event)=>{this.props.onFigureMouseDown(figure.id, event, this.props.mode, this.props.figures)}}
+                                                     onResize={(event) => {this.props.onResizeToolMouseDown(event)}}
+                                    />;
+
+                                case FIGURES.LINE:
+                                    return <Line key={figure.id}
                                                      x={figure.x}
                                                      y={figure.y}
                                                      size={figure.size}

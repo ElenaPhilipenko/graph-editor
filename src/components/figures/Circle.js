@@ -10,7 +10,7 @@ const Circle = ({x, y, size, selected, borderColor, onMouseDown, onResize})=> {
             <circle cx={x} cy={y}
                     r={size/2}
                     onMouseDown={onMouseDown}
-                    stroke={borderColor} strokeWidth="2" fill="red"
+                    stroke={borderColor} strokeWidth="1" fill="red"
                     style={movableFigure}
             />
             {selected ? <BoundingBox x={x-size/2} y={y-size/2} length={size} onResize={onResize}/> : null}

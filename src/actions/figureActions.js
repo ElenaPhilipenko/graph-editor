@@ -2,8 +2,9 @@ export const FIGURES = {
     CIRCLE: 'circle',
     SQUARE: 'square',
     TRIANGLE: 'triangle',
+    LINE: 'line',
     isFigure (figure){
-        return [this.CIRCLE, this.SQUARE, this.TRIANGLE].indexOf(figure) > -1
+        return [this.CIRCLE, this.SQUARE, this.TRIANGLE, this.LINE].indexOf(figure) > -1
     }
 };
 
@@ -16,7 +17,6 @@ export const MOVE_FIGURE = 'MOVE_FIGURE';
 export const DELETE_FIGURE = 'DELETE_FIGURE';
 export const CHANGE_MODE = 'CHANGE_MODE';
 export const RESIZE_FIGURE = 'RESIZE_FIGURE';
-
 
 export const FigureActions = {
     selectFigure (id) {

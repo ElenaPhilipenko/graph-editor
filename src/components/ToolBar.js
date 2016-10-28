@@ -16,6 +16,10 @@ const ToolBar = ({mode, onModeClick, onDelete, onUndo, onRedo, canUndo, canRedo}
                 <span className="glyphicon glyphicon-play"></span>
             </button>
 
+            <button className="btn btn-default dropdown-toggle" type="button" onClick={() => onModeClick(FIGURES.LINE)}>
+                <span>---</span>
+            </button>
+
             <button className="btn btn-default dropdown-toggle" type="button" onClick={() => onDelete()}>
                 <span>delete</span>
             </button>

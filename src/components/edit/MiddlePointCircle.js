@@ -5,7 +5,7 @@ const MiddlePointCircle = ({x, y})=> {
     return (
         <circle cx={x} cy={y}
                 r={3}
-                stroke='blue' strokeWidth="2" fill="white"/>
+                stroke='blue' strokeWidth="1" fill="white"/>
     )
 };
 

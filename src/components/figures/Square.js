@@ -7,7 +7,7 @@ const Square = ({x, y, size, selected, borderColor, onMouseDown, onResize})=> {
         <g>
             <rect x={x-(size/2)} y={y-(size/2)} width={size} height={size}
                   onMouseDown={onMouseDown}
-                  stroke={borderColor} strokeWidth="2" fill="red"
+                  stroke={borderColor} strokeWidth="1" fill="red"
                   style={movableFigure}/>
 
             {selected ? <BoundingBox x={x-size/2} y={y-size/2} length={size} onResize={onResize}/> : null}

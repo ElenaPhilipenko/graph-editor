@@ -10,7 +10,7 @@ const Triangle = ({x, y, size, selected, borderColor, onMouseDown, onResize}) =>
 
     return (
         <g>
-            <polygon stroke={borderColor} strokeWidth="2" fill="red"
+            <polygon stroke={borderColor} strokeWidth="1" fill="red"
                      points={composeCoordinates(x, y, size)}
                      onMouseDown={onMouseDown}
                      style={movableFigure}/>
