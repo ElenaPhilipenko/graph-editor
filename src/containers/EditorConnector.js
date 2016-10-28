@@ -22,7 +22,7 @@ export const mapDispatchToProps = (dispatch) => {
     };
 
     const isEmptyCanvasClick = (event)=> {
-        return event.target.localName === 'svg';
+        return event.target.localName === 'svg' || event.target.id === 'gridRect';
     };
 
     const isSelectedFigure = (id, figures)=> {

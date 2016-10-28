@@ -5,7 +5,7 @@ import MiddlePointCircle from './MiddlePointCircle'
 
 const BoundingBox = ({x, y, length, onResize})=> {
     const s = {
-        strokeWidth: 2,
+        strokeWidth: 1,
         stroke: 'blue'
     };
     return (

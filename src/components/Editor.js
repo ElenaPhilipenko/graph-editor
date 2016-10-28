@@ -2,6 +2,7 @@ import React, { PropTypes } from 'react'
 import Circle from './figures/Circle'
 import Square from './figures/Square'
 import Triangle from './figures/Triangle'
+import Grid from './edit/Grid'
 import uuid from '../uuid'
 import {FIGURES} from '../actions/figureActions'
 
@@ -37,7 +38,9 @@ const Editor = React.createClass({
                  onMouseMove={(event)=>{this.props.onCanvasMouseDrag(event, this.props.mode)}}
                  onMouseDown={(event)=>{this.props.onCanvasMouseDown(uuid(), event, this.props.mode)}}
                  onMouseUp={()=>{this.props.onCanvasMouseUp()}}
-            >
+            >\
+                <Grid/>
+
                 {this.props.figures.map(figure => {
                         if (figure.size > 0) {
                             let borderColor = figure.selected ? 'blue' : figure.borderColor;
