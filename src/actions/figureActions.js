@@ -3,8 +3,9 @@ export const FIGURES = {
     SQUARE: 'square',
     TRIANGLE: 'triangle',
     LINE: 'line',
+    POLYLINE: 'polyline',
     isFigure (figure){
-        return [this.CIRCLE, this.SQUARE, this.TRIANGLE, this.LINE].indexOf(figure) > -1
+        return [this.CIRCLE, this.SQUARE, this.TRIANGLE, this.LINE, this.POLYLINE].indexOf(figure) > -1
     }
 };
 
@@ -17,6 +18,7 @@ export const MOVE_FIGURE = 'MOVE_FIGURE';
 export const DELETE_FIGURE = 'DELETE_FIGURE';
 export const CHANGE_MODE = 'CHANGE_MODE';
 export const RESIZE_FIGURE = 'RESIZE_FIGURE';
+export const ADD_POINT = 'ADD_POINT';
 
 export const FigureActions = {
     selectFigure (id) {
@@ -37,6 +39,10 @@ export const FigureActions = {
 
     addFigure (id, x, y) {
         return {type: ADD_FIGURE, id, x, y};
+    },
+
+    addPoint (id, x, y) {
+        return {type: ADD_POINT, x, y, id};
     },
 
     moveFigure (x, y, skip = true) {

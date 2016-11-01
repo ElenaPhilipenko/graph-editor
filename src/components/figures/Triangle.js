@@ -14,7 +14,7 @@ const Triangle = ({x, y, size, selected, borderColor, onMouseDown, onResize}) =>
                      points={composeCoordinates(x, y, size)}
                      onMouseDown={onMouseDown}
                      style={movableFigure}/>
-            {selected ? <BoundingBox x={x-size} y={y-size} length={size} onResize={onResize}/> : null}
+            {selected ? <BoundingBox x={x-size} y={y-size} width={size} height={size} onResize={onResize}/> : null}
         </g>
     );
 };

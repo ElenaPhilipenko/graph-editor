@@ -1,8 +1,13 @@
 import figures from './store'
 import {FigureActions, FIGURES, changeMode} from '../actions/figureActions'
+import Figure from '../components/model/Figure'
 
 function createSquare(x = 1, y = 1, size = 80) {
-    return {x, y, type: FIGURES.SQUARE, size, borderColor: 'black'};
+    return Figure.createFigure('square', x, y, size);
+}
+
+function createPolyline(x = 1, y = 1) {
+    return Figure.createFigure('polyline', x, y);
 }
 
 let state = {};
@@ -41,7 +46,28 @@ it('should resize a square', () => {
 
     const result = figures(state, FigureActions.resizeFigure(3, 1));
 
-    expect(result.present.figuresById['1'].size).toEqual(22);
+    expect(result.present.figuresById['1'].size.width).toEqual(22);
+});
+
+it('should add a point to a polyline', () => {
+    state.present.figuresById["1"] = createPolyline(1, 33);
+    state.present.selectedFigures.push('1');
+
+    const result = figures(state, FigureActions.addPoint('1', 3, 1));
+
+    expect(result.present.figuresById['1'].points).toEqual([{x: 1, y: 33}, {x: 3, y: 1}]);
+});
+
+it('should resize a square twice', () => {
+    state.present.figuresById["1"] = createSquare(1, 33, 20);
+    state.present.selectedFigures.push('1');
+    state.present.moveStartX = 1;
+    state.present.moveStartY = 1;
+
+    let result = figures(state, FigureActions.resizeFigure(3, 1));
+    result = figures(state, FigureActions.resizeFigure(4, 1));
+
+    expect(result.present.figuresById['1'].size.width).toEqual(23);
 });
 
 it('should move a square', () => {
@@ -54,6 +80,22 @@ it('should move a square', () => {
 
     expect(result.present.figuresById['1'].x).toEqual(140);
     expect(result.present.figuresById['1'].y).toEqual(150);
+});
+
+it('should move all selected square', () => {
+    state.present.figuresById["1"] = createSquare(100, 100);
+    state.present.figuresById["2"] = createSquare(1, 1);
+    state.present.selectedFigures.push('1');
+    state.present.selectedFigures.push('2');
+    state.present.moveStartX = 110;
+    state.present.moveStartY = 110;
+
+    const result = figures(state, FigureActions.moveFigure(150, 160));
+
+    expect(result.present.figuresById['1'].x).toEqual(140);
+    expect(result.present.figuresById['2'].x).toEqual(41);
+    expect(result.present.figuresById['1'].y).toEqual(150);
+    expect(result.present.figuresById['2'].y).toEqual(51);
 });
 
 it('should not move not selected figures', () => {

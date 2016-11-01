@@ -12,7 +12,7 @@ const Line = ({x, y, size, selected, borderColor, onMouseDown, onResize})=> {
                   onMouseDown={onMouseDown}
                   style={movableFigure}
             />
-            {selected ? <BoundingBox x={x} y={y} length={size}
+            {selected ? <BoundingBox x={x} y={y} width={size} height={size}
                                      onMouseDown={onMouseDown}
                                      onResize={onResize}/> : null}
         </g>)

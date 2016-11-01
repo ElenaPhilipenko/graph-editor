@@ -6,7 +6,11 @@ const mapStateToProps = (state) => {
     const figures = Object.getOwnPropertyNames(state.present.figuresById)
         .map(key => {
             return Object.assign({}, state.present.figuresById[key],
-                {id: key, selected: state.present.selectedFigures.indexOf(key) > -1})
+                {
+                    id: key,
+                    selected: state.present.selectedFigures.indexOf(key) > -1,
+                    size: state.present.figuresById[key].size
+                })
         });
     return {
         figures: figures,
@@ -34,6 +38,8 @@ export const mapDispatchToProps = (dispatch) => {
     let isFirstMove = true;
     let prevMode = 'move';
 
+    let drawingFigureId;
+
     return {
         onFigureMouseDown (id, event, mode, figures) {
             if (mode === 'select') {
@@ -57,6 +63,9 @@ export const mapDispatchToProps = (dispatch) => {
             if (isEmptyCanvasClick(event)) {
                 if (FIGURES.isFigure(mode)) {
                     dispatch(FigureActions.addFigure(id, ...coords));
+                    if (mode === FIGURES.POLYLINE) {
+                        drawingFigureId = id;
+                    }
                 } else {
                     dispatch(FigureActions.deselectAllFigures());
                 }
@@ -69,6 +78,9 @@ export const mapDispatchToProps = (dispatch) => {
                 dispatch(FigureActions.resizeFigure(...coords, !isFirstMove));
             } else if (mode === 'move') {
                 dispatch(FigureActions.moveFigure(...coords, !isFirstMove));
+            } else if (mode === FIGURES.POLYLINE) {
+                dispatch(FigureActions.addPoint(drawingFigureId, ...coords))
+
             }
             isFirstMove = false;
         },

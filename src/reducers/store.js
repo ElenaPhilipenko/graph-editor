@@ -1,8 +1,9 @@
 import Immutable from 'immutable'
 import undoable from 'redux-undo'
 import {SELECT_FIGURE, CHANGE_FIGURE_SELECTION, DELETE_FIGURE, DESELECT_ALL_FIGURES,
-START_DRAGGING, ADD_FIGURE, MOVE_FIGURE, RESIZE_FIGURE, CHANGE_MODE, FIGURES } from '../actions/figureActions'
+    START_DRAGGING, ADD_FIGURE, MOVE_FIGURE, RESIZE_FIGURE, CHANGE_MODE, FIGURES, ADD_POINT} from '../actions/figureActions'
 import filter from './actionUndoFilter'
+import Figure from '../components/model/Figure'
 
 function figures(state = {
     figuresById: {},
@@ -13,16 +14,14 @@ function figures(state = {
     moveStartX: 0,
     moveStartY: 0
 }, action) {
+    const updateFiguresById = (id, newFigure)=> {
+        return Object.assign({}, state.figuresById, {[id]: newFigure});
+    };
+
     switch (action.type) {
         case ADD_FIGURE:
         {
-            let newFigure = Immutable.Map(state.figuresById).set(action.id, {
-                x: action.x,
-                y: action.y,
-                size: 80,
-                borderColor: 'black',
-                type: state.mode
-            }).toJS();
+            let newFigure = updateFiguresById(action.id, Figure.createFigure(state.mode, action.x, action.y));
             return Object.assign({}, state, {figuresById: newFigure});
         }
         case SELECT_FIGURE:
@@ -78,8 +77,7 @@ function figures(state = {
             Object.keys(state.figuresById).forEach(id => {
                 const figure = state.figuresById[id];
                 if (state.selectedFigures.indexOf(id) > -1) {
-                    moved = moved.setIn([id, 'x'], figure.x + (action.x - state.moveStartX));
-                    moved = moved.setIn([id, 'y'], figure.y + (action.y - state.moveStartY));
+                    moved = moved.set(id, figure.move(action.x - state.moveStartX, action.y - state.moveStartY));
                 }
             });
             return Object.assign({}, state, {
@@ -94,13 +92,28 @@ function figures(state = {
             Object.keys(state.figuresById).forEach(id => {
                 const figure = state.figuresById[id];
                 if (state.selectedFigures.indexOf(id) > -1) {
-                    resized = resized.setIn([id, 'size'], figure.size + (action.x - state.moveStartX));
+                    resized = resized.set(id, figure.resize(action.x - state.moveStartX));
                 }
             });
             return Object.assign({}, state, {
                 moveStartX: action.x,
                 moveStartY: action.y,
                 figuresById: resized.toJS()
+            });
+        }
+        case ADD_POINT:
+        {
+            let updated = Immutable.fromJS(state.figuresById);
+            Object.keys(state.figuresById).forEach(id => {
+                const figure = state.figuresById[id];
+                if (action.id === id) {
+                    updated = updated.set(id, figure.addPoint(action.x, action.y));
+                }
+            });
+            return Object.assign({}, state, {
+                moveStartX: action.x,
+                moveStartY: action.y,
+                figuresById: updated.toJS()
             });
         }
         case CHANGE_MODE:

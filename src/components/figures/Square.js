@@ -10,7 +10,7 @@ const Square = ({x, y, size, selected, borderColor, onMouseDown, onResize})=> {
                   stroke={borderColor} strokeWidth="1" fill="red"
                   style={movableFigure}/>
 
-            {selected ? <BoundingBox x={x-size/2} y={y-size/2} length={size} onResize={onResize}/> : null}
+            {selected ? <BoundingBox x={x-size/2} y={y-size/2} width={size} height={size} onResize={onResize}/> : null}
         </g>)
 };
 

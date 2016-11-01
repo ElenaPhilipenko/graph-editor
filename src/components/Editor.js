@@ -2,6 +2,7 @@ import React, { PropTypes } from 'react'
 import Circle from './figures/Circle'
 import Square from './figures/Square'
 import Line from './figures/Line'
+import Polyline from './figures/Polyline'
 import Triangle from './figures/Triangle'
 import Grid from './edit/Grid'
 import uuid from '../uuid'
@@ -43,14 +44,14 @@ const Editor = React.createClass({
                 <Grid/>
 
                 {this.props.figures.map(figure => {
-                        if (figure.size > 0) {
+                        if (figure.size.width > 0 || figure.size.height > 0) {
                             let borderColor = figure.selected ? 'blue' : figure.borderColor;
                             switch (figure.type) {
                                 case FIGURES.CIRCLE:
                                     return <Circle key={figure.id}
                                                    x={figure.x}
                                                    y={figure.y}
-                                                   size={figure.size}
+                                                   size={figure.side}
                                                    borderColor={borderColor}
                                                    selected={figure.selected}
                                                    onMouseDown={(event)=>{this.props.onFigureMouseDown(figure.id, event, this.props.mode, this.props.figures)}}
@@ -61,7 +62,7 @@ const Editor = React.createClass({
                                     return <Square key={figure.id}
                                                    x={figure.x}
                                                    y={figure.y}
-                                                   size={figure.size}
+                                                   size={figure.side}
                                                    borderColor={borderColor}
                                                    selected={figure.selected}
                                                    onMouseDown={(event)=>{this.props.onFigureMouseDown(figure.id, event, this.props.mode, this.props.figures)}}
@@ -71,7 +72,7 @@ const Editor = React.createClass({
                                     return <Triangle key={figure.id}
                                                      x={figure.x}
                                                      y={figure.y}
-                                                     size={figure.size}
+                                                     size={figure.side}
                                                      borderColor={borderColor}
                                                      selected={figure.selected}
                                                      onMouseDown={(event)=>{this.props.onFigureMouseDown(figure.id, event, this.props.mode, this.props.figures)}}
@@ -80,9 +81,18 @@ const Editor = React.createClass({
 
                                 case FIGURES.LINE:
                                     return <Line key={figure.id}
-                                                     x={figure.x}
-                                                     y={figure.y}
+                                                 x={figure.x}
+                                                 y={figure.y}
+                                                 size={figure.side}
+                                                 borderColor={borderColor}
+                                                 selected={figure.selected}
+                                                 onMouseDown={(event)=>{this.props.onFigureMouseDown(figure.id, event, this.props.mode, this.props.figures)}}
+                                                 onResize={(event) => {this.props.onResizeToolMouseDown(event)}}
+                                    />;
+                                case FIGURES.POLYLINE:
+                                    return <Polyline key={figure.id}
                                                      size={figure.size}
+                                                     points={figure.points}
                                                      borderColor={borderColor}
                                                      selected={figure.selected}
                                                      onMouseDown={(event)=>{this.props.onFigureMouseDown(figure.id, event, this.props.mode, this.props.figures)}}
@@ -105,8 +115,11 @@ const Editor = React.createClass({
 Editor.propTypes = {
     figures: PropTypes.arrayOf(PropTypes.shape({
         id: PropTypes.string.isRequired,
-        x: PropTypes.number.isRequired,
-        y: PropTypes.number.isRequired
+        borderColor: PropTypes.string.isRequired,
+        x: PropTypes.number,
+        y: PropTypes.number,
+        size: PropTypes.number,
+        points: PropTypes.array
     }).isRequired).isRequired,
     mode: PropTypes.string.isRequired,
     onFigureMouseDown: PropTypes.func.isRequired,
