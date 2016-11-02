@@ -118,7 +118,7 @@ Editor.propTypes = {
         borderColor: PropTypes.string.isRequired,
         x: PropTypes.number,
         y: PropTypes.number,
-        size: PropTypes.number,
+        size: PropTypes.shape,
         points: PropTypes.array
     }).isRequired).isRequired,
     mode: PropTypes.string.isRequired,

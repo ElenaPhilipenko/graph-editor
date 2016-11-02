@@ -1,4 +1,4 @@
-import {FIGURES} from '../../actions/figureActions'
+import {FIGURES} from '../actions/figureActions'
 
 class Figure {
     constructor(type, borderColor) {
@@ -88,7 +88,7 @@ export class PolyFigure extends Figure {
     }
 
     resize(sizeChange) {
-        return super.resize(sizeChange);
+        return this;
     }
 }
 

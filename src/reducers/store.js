@@ -3,7 +3,7 @@ import undoable from 'redux-undo'
 import {SELECT_FIGURE, CHANGE_FIGURE_SELECTION, DELETE_FIGURE, DESELECT_ALL_FIGURES,
     START_DRAGGING, ADD_FIGURE, MOVE_FIGURE, RESIZE_FIGURE, CHANGE_MODE, FIGURES, ADD_POINT} from '../actions/figureActions'
 import filter from './actionUndoFilter'
-import Figure from '../components/model/Figure'
+import Figure from '../model/Figure'
 
 function figures(state = {
     figuresById: {},

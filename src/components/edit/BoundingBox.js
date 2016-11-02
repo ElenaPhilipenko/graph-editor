@@ -18,7 +18,7 @@ const BoundingBox = ({x, y, width, height, onResize})=> {
             <MiddlePointCircle x={x} y={y+height/2}/>
             <MiddlePointCircle x={x+width/2} y={y+height}/>
 
-            <ResizeTool x={x+width} y={y+width} onMouseDown={onResize}/>
+            <ResizeTool x={x+width} y={y+height+9} onMouseDown={onResize}/>
         </g>
     )
 };

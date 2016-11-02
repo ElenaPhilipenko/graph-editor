@@ -1,6 +1,6 @@
 import figures from './store'
 import {FigureActions, FIGURES, changeMode} from '../actions/figureActions'
-import Figure from '../components/model/Figure'
+import Figure from '../model/Figure'
 
 function createSquare(x = 1, y = 1, size = 80) {
     return Figure.createFigure('square', x, y, size);
