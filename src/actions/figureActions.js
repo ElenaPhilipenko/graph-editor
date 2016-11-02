@@ -42,7 +42,7 @@ export const FigureActions = {
     },
 
     addPoint (id, x, y) {
-        return {type: ADD_POINT, x, y, id};
+        return {type: ADD_POINT, x, y, id, skip: true};
     },
 
     moveFigure (x, y, skip = true) {
