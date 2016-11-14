@@ -48,9 +48,11 @@ class SymmetricalFigure extends Figure {
 }
 
 export class PolyFigure extends Figure {
-    constructor(type, borderColor, points) {
+    constructor(type, borderColor, points, width, height) {
         super(type, borderColor);
         this.points = points;
+        this.width = width;
+        this.height = height;
     }
 
     addPoint(x, y) {
@@ -65,7 +67,7 @@ export class PolyFigure extends Figure {
             ))
     }
 
-    get size() {
+    calculateSize() {
         let minY = this.points[0].y;
         let maxY = minY;
         let minX = this.points[0].x;
@@ -87,9 +89,43 @@ export class PolyFigure extends Figure {
         return {height: maxY - minY, width: maxX - minX}
     }
 
-    resize(sizeChange) {
-        return this;
+    get size() {
+        if (this.width === undefined || this.height === undefined) {
+            return this.calculateSize();
+        }
+        return {width: this.width, height: this.height};
+    }
+
+    resize(sizeChangeX) {
+        if (sizeChangeX === 0) {
+            return this;
+        }
+        const size = this.size;
+
+        const expectedWidth = sizeChangeX + size.width;
+        const expectedHeight = sizeChangeX + size.height;
+
+        if (expectedWidth <= 0 || expectedHeight <= 0) {
+            return new PolyFigure(this.type, this.borderColor, this.points, expectedWidth, expectedHeight);
+        }
+
+        const scaleX = expectedWidth / this.calculateSize().width;
+        const scaledPoints = scalePoints(this.points, scaleX, scaleX);
+
+        const distanceX = -scaledPoints[0].x + this.points[0].x;
+        const distanceY = -scaledPoints[0].y + this.points[0].y;
+        return new PolyFigure(this.type, this.borderColor, scaledPoints)
+            .move(distanceX, distanceY);
     }
 }
+
+const scalePoints = function (points, xScale, yScale) {
+    return points.map(p => {
+        return {
+            x: Math.abs(p.x * xScale),
+            y: Math.abs(p.y * yScale)
+        };
+    });
+};
 
 export default Figure;

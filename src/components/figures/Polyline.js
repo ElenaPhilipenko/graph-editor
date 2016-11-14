@@ -24,6 +24,7 @@ const Polyline = ({points, selected, size, borderColor, onMouseDown, onResize})=
         <g>
             <polyline points={formatPoints(points)}
                       stroke={borderColor}
+                      strokeWidth="2"
                       onMouseDown={onMouseDown}
                       fill="none"
                       style={movableFigure}
