@@ -1,19 +1,22 @@
 import Immutable from 'immutable'
 import undoable from 'redux-undo'
 import {SELECT_FIGURE, CHANGE_FIGURE_SELECTION, DELETE_FIGURE, DESELECT_ALL_FIGURES,
-    START_DRAGGING, ADD_FIGURE, MOVE_FIGURE, RESIZE_FIGURE, CHANGE_MODE, FIGURES, ADD_POINT} from '../actions/figureActions'
+    START_DRAGGING, ADD_FIGURE, MOVE_FIGURE, RESIZE_FIGURE, CHANGE_MODE, FIGURES, ADD_POINT,
+    SEND_FIGURE_BACK, SEND_FIGURE_FRONT} from '../actions/figureActions'
 import filter from './actionUndoFilter'
 import Figure from '../model/Figure'
 
 function figures(state = {
     figuresById: {},
     selectedFigures: [],
+    figuresOrder: [],
 
     mode: FIGURES.CIRCLE,
 
     moveStartX: 0,
     moveStartY: 0
 }, action) {
+    console.log(action);
     const updateFiguresById = (id, newFigure)=> {
         return Object.assign({}, state.figuresById, {[id]: newFigure});
     };
@@ -22,7 +25,10 @@ function figures(state = {
         case ADD_FIGURE:
         {
             let newFigure = updateFiguresById(action.id, Figure.createFigure(state.mode, action.x, action.y));
-            return Object.assign({}, state, {figuresById: newFigure});
+            return Object.assign({}, state, {
+                figuresById: newFigure,
+                figuresOrder: [...state.figuresOrder, action.id]
+            });
         }
         case SELECT_FIGURE:
         {
@@ -35,15 +41,18 @@ function figures(state = {
         case DELETE_FIGURE:
         {
             const notSelected = {};
+            let figuresOrder = {};
             Object.keys(state.figuresById)
                 .filter(f => {
                     return state.selectedFigures.indexOf(f) === -1
                 })
                 .forEach(id => {
-                    notSelected[id] = state.figuresById[id]
+                    notSelected[id] = state.figuresById[id];
+                    figuresOrder = Immutable.List(state.figuresOrder).delete(state.figuresOrder.indexOf(id)).toJS();
                 });
             return Object.assign({}, state, {
                 selectedFigures: [],
+                figuresOrder: figuresOrder,
                 figuresById: notSelected
             });
         }
@@ -86,6 +95,27 @@ function figures(state = {
                 figuresById: moved.toJS()
             });
         }
+
+        case SEND_FIGURE_FRONT:
+        {
+            let figuresOrder = Immutable.List(state.figuresOrder)
+                .delete(state.figuresOrder.indexOf(action.id))
+                .insert(0, action.id).toJS();
+            return Object.assign({}, state, {
+                figuresOrder: figuresOrder
+            });
+        }
+
+        case SEND_FIGURE_BACK:
+        {
+            let figuresOrder = Immutable.List(state.figuresOrder)
+                .delete(state.figuresOrder.indexOf(action.id))
+                .set(state.figuresOrder.length-1, action.id).toJS();
+            return Object.assign({}, state, {
+                figuresOrder: figuresOrder
+            });
+        }
+
         case RESIZE_FIGURE:
         {
             let resized = Immutable.fromJS(state.figuresById);

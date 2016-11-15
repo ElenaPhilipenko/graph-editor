@@ -18,6 +18,7 @@ function createEmptyState() {
         past: [],
         present: {
             figuresById: {},
+            figuresOrder: [],
             selectedFigures: [],
             mode: '',
             moveStartX: 0,
@@ -39,7 +40,7 @@ it('should  add a square', () => {
 });
 
 it('should resize a square', () => {
-    state.present.figuresById["1"] = createSquare(1, 33, 20);
+    state.present.figuresById['1'] = createSquare(1, 33, 20);
     state.present.selectedFigures.push('1');
     state.present.moveStartX = 1;
     state.present.moveStartY = 1;
@@ -50,7 +51,7 @@ it('should resize a square', () => {
 });
 
 it('should add a point to a polyline', () => {
-    state.present.figuresById["1"] = createPolyline(1, 33);
+    state.present.figuresById['1'] = createPolyline(1, 33);
     state.present.selectedFigures.push('1');
 
     const result = figures(state, FigureActions.addPoint('1', 3, 1));
@@ -59,7 +60,7 @@ it('should add a point to a polyline', () => {
 });
 
 it('should resize a square twice', () => {
-    state.present.figuresById["1"] = createSquare(1, 33, 20);
+    state.present.figuresById['1'] = createSquare(1, 33, 20);
     state.present.selectedFigures.push('1');
     state.present.moveStartX = 1;
     state.present.moveStartY = 1;
@@ -71,7 +72,7 @@ it('should resize a square twice', () => {
 });
 
 it('should move a square', () => {
-    state.present.figuresById["1"] = createSquare(100, 100);
+    state.present.figuresById['1'] = createSquare(100, 100);
     state.present.selectedFigures.push('1');
     state.present.moveStartX = 110;
     state.present.moveStartY = 110;
@@ -83,8 +84,8 @@ it('should move a square', () => {
 });
 
 it('should move all selected square', () => {
-    state.present.figuresById["1"] = createSquare(100, 100);
-    state.present.figuresById["2"] = createSquare(1, 1);
+    state.present.figuresById['1'] = createSquare(100, 100);
+    state.present.figuresById['2'] = createSquare(1, 1);
     state.present.selectedFigures.push('1');
     state.present.selectedFigures.push('2');
     state.present.moveStartX = 110;
@@ -99,8 +100,8 @@ it('should move all selected square', () => {
 });
 
 it('should not move not selected figures', () => {
-    state.present.figuresById["1"] = createSquare(100, 100);
-    state.present.figuresById["2"] = createSquare(2, 2);
+    state.present.figuresById['1'] = createSquare(100, 100);
+    state.present.figuresById['2'] = createSquare(2, 2);
     state.present.selectedFigures.push('1');
     state.present.moveStartX = 110;
     state.present.moveStartY = 110;
@@ -112,8 +113,8 @@ it('should not move not selected figures', () => {
 });
 
 it('should  delete a figure', () => {
-    state.present.figuresById["1"] = createSquare(1, 34);
-    state.present.selectedFigures.push("1");
+    state.present.figuresById['1'] = createSquare(1, 34);
+    state.present.selectedFigures.push('1');
 
     const result = figures(state, FigureActions.deleteFigure());
 
@@ -132,11 +133,11 @@ it('should select a figure', ()=> {
 
     const result = figures(state, FigureActions.selectFigure('1'));
 
-    expect(result.present.selectedFigures.indexOf("1")).toBeGreaterThan(-1);
+    expect(result.present.selectedFigures.indexOf('1')).toBeGreaterThan(-1);
 });
 
 it('should deselect all figures', ()=> {
-    state.present.selectedFigures = ["1", "3", "4"];
+    state.present.selectedFigures = ['1', '3', '4'];
 
     const result = figures(state, FigureActions.deselectAllFigures());
 
@@ -144,22 +145,80 @@ it('should deselect all figures', ()=> {
 });
 
 it('should change selection of a not selected figure', ()=> {
-    state.present.figuresById["1"] = createSquare();
-    state.present.selectedFigures = ["3"];
+    state.present.figuresById['1'] = createSquare();
+    state.present.selectedFigures = ['3'];
 
-    const result = figures(state, FigureActions.changeFigureSelection("1"));
+    const result = figures(state, FigureActions.changeFigureSelection('1'));
 
-    expect(result.present.selectedFigures.indexOf("1")).toBeGreaterThan(-1);
+    expect(result.present.selectedFigures.indexOf('1')).toBeGreaterThan(-1);
 });
 
 it('should change selection of a selected figure', ()=> {
-    state.present.figuresById["1"] = createSquare();
-    state.present.selectedFigures = ["3", "1"];
+    state.present.figuresById['1'] = createSquare();
+    state.present.selectedFigures = ['3', '1'];
 
-    const result = figures(state, FigureActions.changeFigureSelection("1"));
+    const result = figures(state, FigureActions.changeFigureSelection('1'));
 
-    expect(result.present.selectedFigures.indexOf("1")).toBe(-1);
+    expect(result.present.selectedFigures.indexOf('1')).toBe(-1);
 });
+
+it('should keep order of creation', ()=> {
+    state.present.mode = 'line';
+
+    let result = figures(state, FigureActions.addFigure('2', 1, 1));
+    result = figures(result, FigureActions.addFigure('3', 4, 4));
+
+    expect(result.present.figuresOrder).toEqual(['2', '3']);
+});
+
+it('should send figure from middle to the front', ()=> {
+    state.present.figuresOrder = ['1', '2', '3'];
+
+    const result = figures(state, FigureActions.sendFigureFront('2'));
+
+    expect(result.present.figuresOrder).toEqual(['2', '1', '3']);
+});
+
+it('should send figure from back to the front', ()=> {
+    state.present.figuresOrder = ['1', '2', '3', '4'];
+
+    const result = figures(state, FigureActions.sendFigureFront('4'));
+
+    expect(result.present.figuresOrder).toEqual(['4', '1', '2', '3']);
+});
+
+it('should do nothing on send figure from front to the front', ()=> {
+    state.present.figuresOrder = ['1', '2', '3', '4'];
+
+    const result = figures(state, FigureActions.sendFigureFront('1'));
+
+    expect(result.present.figuresOrder).toEqual(['1', '2', '3', '4']);
+});
+
+it('should send figure from middle to the back', ()=> {
+    state.present.figuresOrder = ['1', '2', '3'];
+
+    const result = figures(state, FigureActions.sendFigureBack('2'));
+
+    expect(result.present.figuresOrder).toEqual([ '1', '3', '2']);
+});
+
+it('should send figure from front to the back', ()=> {
+    state.present.figuresOrder = ['1', '2', '3', '4'];
+
+    const result = figures(state, FigureActions.sendFigureBack('1'));
+
+    expect(result.present.figuresOrder).toEqual([ '2', '3', '4', '1']);
+});
+
+it('should do nothing on send figure from back to the back', ()=> {
+    state.present.figuresOrder = ['1', '2', '3', '4'];
+
+    const result = figures(state, FigureActions.sendFigureBack('4'));
+
+    expect(result.present.figuresOrder).toEqual(['1', '2', '3', '4']);
+});
+
 
 
 

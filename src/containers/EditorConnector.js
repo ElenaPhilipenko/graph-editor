@@ -3,7 +3,7 @@ import Editor from '../components/Editor'
 import {FIGURES, FigureActions, changeMode} from '../actions/figureActions'
 
 const mapStateToProps = (state) => {
-    const figures = Object.getOwnPropertyNames(state.present.figuresById)
+    const figures = state.present.figuresOrder
         .map(key => {
             return Object.assign({}, state.present.figuresById[key],
                 {
@@ -44,6 +44,10 @@ export const mapDispatchToProps = (dispatch) => {
         onFigureMouseDown (id, event, mode, figures) {
             if (mode === 'select') {
                 dispatch(FigureActions.changeFigureSelection(id));
+            } else if (mode === 'front') {
+                dispatch(FigureActions.sendFigureFront(id));
+            } else if (mode === 'back') {
+                dispatch(FigureActions.sendFigureBack(id));
             } else {
                 dispatch(FigureActions.startDragging(...calcCoordinates(event)));
                 dispatch(changeMode('move'));

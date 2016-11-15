@@ -1,6 +1,7 @@
 import {mapDispatchToProps} from './EditorConnector'
 import {FIGURES, SELECT_FIGURE, DESELECT_ALL_FIGURES, ADD_FIGURE, START_DRAGGING,
-    MOVE_FIGURE, RESIZE_FIGURE, CHANGE_FIGURE_SELECTION, CHANGE_MODE} from '../actions/figureActions'
+    MOVE_FIGURE, RESIZE_FIGURE, CHANGE_FIGURE_SELECTION, CHANGE_MODE, SEND_FIGURE_BACK,
+    SEND_FIGURE_FRONT} from '../actions/figureActions'
 
 let mapDispatch = {};
 let dispatchMock = jest.fn();
@@ -51,6 +52,18 @@ it('should select the figure on mouse down on the figure', ()=> {
     mapDispatch.onFigureMouseDown('1', createMouseEventWithCoords(), 'move', [{id: '1', selected: false}]);
 
     expect(dispatchMock.mock.calls.map(a => a[0].type)).toContain(CHANGE_FIGURE_SELECTION);
+});
+
+it('should send figure back on mouse down on the figure', ()=> {
+    mapDispatch.onFigureMouseDown('1', createMouseEventWithCoords(), 'back', [{id: '1', selected: false}]);
+
+    expect(dispatchMock.mock.calls.map(a => a[0].type)).toContain(SEND_FIGURE_BACK);
+});
+
+it('should send figure front on mouse down on the figure', ()=> {
+    mapDispatch.onFigureMouseDown('1', createMouseEventWithCoords(), 'front', [{id: '1', selected: false}]);
+
+    expect(dispatchMock.mock.calls.map(a => a[0].type)).toContain(SEND_FIGURE_FRONT);
 });
 
 it('should deselect all figures on mouse down on empty canvas on not figure mode', ()=> {

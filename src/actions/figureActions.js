@@ -19,6 +19,8 @@ export const DELETE_FIGURE = 'DELETE_FIGURE';
 export const CHANGE_MODE = 'CHANGE_MODE';
 export const RESIZE_FIGURE = 'RESIZE_FIGURE';
 export const ADD_POINT = 'ADD_POINT';
+export const SEND_FIGURE_BACK = 'SEND_FIGURE_BACK';
+export const SEND_FIGURE_FRONT = 'SEND_FIGURE_FRONT';
 
 export const FigureActions = {
     selectFigure (id) {
@@ -51,6 +53,14 @@ export const FigureActions = {
 
     resizeFigure (x, y, skip = true) {
         return {type: RESIZE_FIGURE, x, y, skip};
+    },
+
+    sendFigureBack(id){
+        return {type: SEND_FIGURE_BACK, id}
+    },
+
+    sendFigureFront(id){
+        return {type: SEND_FIGURE_FRONT, id}
     },
 
     deleteFigure () {

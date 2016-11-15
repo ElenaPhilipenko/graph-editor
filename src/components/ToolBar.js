@@ -28,6 +28,14 @@ const ToolBar = ({mode, onModeClick, onDelete, onUndo, onRedo, canUndo, canRedo}
                 <span>delete</span>
             </button>
 
+            <button className="btn btn-default dropdown-toggle" type="button" onClick={() => onModeClick('back')}>
+                <span>front</span>
+            </button>
+
+            <button className="btn btn-default dropdown-toggle" type="button" onClick={() => onModeClick('front')}>
+                <span>back</span>
+            </button>
+
             <button className="btn btn-default dropdown-toggle" type="button" disabled={!canUndo} onClick={() => onUndo()}>
                 <span className="glyphicon glyphicon-menu-left"/>
             </button>

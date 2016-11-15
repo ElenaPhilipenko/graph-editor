@@ -1,5 +1,15 @@
 import {FIGURES} from '../actions/figureActions'
 
+const scalePoints = function (points, xScale, yScale) {
+    return points.map(p => {
+        return {
+            x: Math.abs(p.x * xScale),
+            y: Math.abs(p.y * yScale)
+        };
+    });
+};
+
+
 class Figure {
     constructor(type, borderColor) {
         this.type = type;
@@ -118,14 +128,5 @@ export class PolyFigure extends Figure {
             .move(distanceX, distanceY);
     }
 }
-
-const scalePoints = function (points, xScale, yScale) {
-    return points.map(p => {
-        return {
-            x: Math.abs(p.x * xScale),
-            y: Math.abs(p.y * yScale)
-        };
-    });
-};
 
 export default Figure;
