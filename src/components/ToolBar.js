@@ -4,47 +4,53 @@ import {FIGURES} from '../actions/figureActions'
 const ToolBar = ({mode, onModeClick, onDelete, onUndo, onRedo, canUndo, canRedo}) => {
     return (
         <div>
-            <button className="btn btn-default dropdown-toggle" type="button" onClick={() => onModeClick(FIGURES.CIRCLE)}>
+            <button className={mode !== FIGURES.CIRCLE ? 'btn btn-default': 'btn btn-default active'}
+                    type="button" onClick={() => onModeClick(FIGURES.CIRCLE)}>
                 <span className="glyphicon glyphicon-plus-sign"/>
             </button>
 
-            <button className="btn btn-default dropdown-toggle" type="button" onClick={() => onModeClick(FIGURES.SQUARE)}>
+            <button className={mode !== FIGURES.SQUARE ? 'btn btn-default': 'btn btn-default active'}
+                    type="button" onClick={() => onModeClick(FIGURES.SQUARE)}>
                 <span className="glyphicon glyphicon-stop"/>
             </button>
 
-            <button className="btn btn-default dropdown-toggle" type="button" onClick={() => onModeClick(FIGURES.TRIANGLE)}>
+            <button className={mode !== FIGURES.TRIANGLE ? 'btn btn-default': 'btn btn-default active'}
+                    type="button" onClick={() => onModeClick(FIGURES.TRIANGLE)}>
                 <span className="glyphicon glyphicon-play"/>
             </button>
 
-            <button className="btn btn-default dropdown-toggle" type="button" onClick={() => onModeClick(FIGURES.LINE)}>
+            <button className={mode !== FIGURES.LINE ? 'btn btn-default': 'btn btn-default active'}
+                    type="button" onClick={() => onModeClick(FIGURES.LINE)}>
                 <span>---</span>
             </button>
 
-            <button className="btn btn-default dropdown-toggle" type="button" onClick={() => onModeClick(FIGURES.POLYLINE)}>
+            <button className={mode !== FIGURES.POLYLINE ? 'btn btn-default': 'btn btn-default active'}
+                    type="button" onClick={() => onModeClick(FIGURES.POLYLINE)}>
                 <span className="glyphicon glyphicon-pencil"/>
             </button>
 
-            <button className="btn btn-default dropdown-toggle" type="button" onClick={() => onDelete()}>
+            <button className={mode !== 'delete' ? 'btn btn-default': 'btn btn-default active'}
+                    type="button" onClick={() => onDelete()}>
                 <span>delete</span>
             </button>
 
-            <button className="btn btn-default dropdown-toggle" type="button" onClick={() => onModeClick('back')}>
+            <button className={mode !== 'back' ? 'btn btn-default': 'btn btn-default active'}
+                    type="button" onClick={() => onModeClick('back')}>
                 <span>front</span>
             </button>
 
-            <button className="btn btn-default dropdown-toggle" type="button" onClick={() => onModeClick('front')}>
+            <button className='btn btn-default' type="button" onClick={() => onModeClick('front')}>
                 <span>back</span>
             </button>
 
-            <button className="btn btn-default dropdown-toggle" type="button" disabled={!canUndo} onClick={() => onUndo()}>
+            <button className='btn btn-default' type="button" disabled={!canUndo} onClick={() => onUndo()}>
                 <span className="glyphicon glyphicon-menu-left"/>
             </button>
 
-            <button className="btn btn-default dropdown-toggle" type="button" disabled={!canRedo} onClick={() => onRedo()}>
+            <button className='btn btn-default' type="button" disabled={!canRedo} onClick={() => onRedo()}>
                 <span className="glyphicon glyphicon-menu-right"/>
             </button>
 
-            {mode}
         </div>)
 };
 
