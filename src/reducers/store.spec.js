@@ -200,7 +200,7 @@ it('should send figure from middle to the back', ()=> {
 
     const result = figures(state, FigureActions.sendFigureBack('2'));
 
-    expect(result.present.figuresOrder).toEqual([ '1', '3', '2']);
+    expect(result.present.figuresOrder).toEqual(['1', '3', '2']);
 });
 
 it('should send figure from front to the back', ()=> {
@@ -208,7 +208,7 @@ it('should send figure from front to the back', ()=> {
 
     const result = figures(state, FigureActions.sendFigureBack('1'));
 
-    expect(result.present.figuresOrder).toEqual([ '2', '3', '4', '1']);
+    expect(result.present.figuresOrder).toEqual(['2', '3', '4', '1']);
 });
 
 it('should do nothing on send figure from back to the back', ()=> {
@@ -217,6 +217,19 @@ it('should do nothing on send figure from back to the back', ()=> {
     const result = figures(state, FigureActions.sendFigureBack('4'));
 
     expect(result.present.figuresOrder).toEqual(['1', '2', '3', '4']);
+});
+
+it('should remove delted figure from order', ()=> {
+    state.present.figuresOrder = ['1', '2', '3', '4'];
+    state.present.selectedFigures = ['3'];
+    state.present.figuresById['1'] =createSquare();
+    state.present.figuresById['2'] =createSquare();
+    state.present.figuresById['3'] =createSquare();
+    state.present.figuresById['4'] =createSquare();
+
+    const result = figures(state, FigureActions.deleteFigure());
+
+    expect(result.present.figuresOrder).toEqual(['1', '2', '4']);
 });
 
 

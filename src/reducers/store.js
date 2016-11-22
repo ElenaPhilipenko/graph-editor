@@ -16,7 +16,6 @@ function figures(state = {
     moveStartX: 0,
     moveStartY: 0
 }, action) {
-    console.log(action);
     const updateFiguresById = (id, newFigure)=> {
         return Object.assign({}, state.figuresById, {[id]: newFigure});
     };
@@ -41,14 +40,14 @@ function figures(state = {
         case DELETE_FIGURE:
         {
             const notSelected = {};
-            let figuresOrder = {};
+            let figuresOrder = [];
             Object.keys(state.figuresById)
                 .filter(f => {
                     return state.selectedFigures.indexOf(f) === -1
                 })
                 .forEach(id => {
                     notSelected[id] = state.figuresById[id];
-                    figuresOrder = Immutable.List(state.figuresOrder).delete(state.figuresOrder.indexOf(id)).toJS();
+                    figuresOrder.push(id);
                 });
             return Object.assign({}, state, {
                 selectedFigures: [],
