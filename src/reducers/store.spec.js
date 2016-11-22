@@ -173,53 +173,59 @@ it('should keep order of creation', ()=> {
 
 it('should send figure from middle to the front', ()=> {
     state.present.figuresOrder = ['1', '2', '3'];
+    state.present.selectedFigures = ['2'];
 
-    const result = figures(state, FigureActions.sendFigureFront('2'));
+    const result = figures(state, FigureActions.sendFigureFront());
 
     expect(result.present.figuresOrder).toEqual(['2', '1', '3']);
 });
 
 it('should send figure from back to the front', ()=> {
     state.present.figuresOrder = ['1', '2', '3', '4'];
+    state.present.selectedFigures = ['4'];
 
-    const result = figures(state, FigureActions.sendFigureFront('4'));
+    const result = figures(state, FigureActions.sendFigureFront());
 
     expect(result.present.figuresOrder).toEqual(['4', '1', '2', '3']);
 });
 
 it('should do nothing on send figure from front to the front', ()=> {
     state.present.figuresOrder = ['1', '2', '3', '4'];
+    state.present.selectedFigures = ['1'];
 
-    const result = figures(state, FigureActions.sendFigureFront('1'));
+    const result = figures(state, FigureActions.sendFigureFront());
 
     expect(result.present.figuresOrder).toEqual(['1', '2', '3', '4']);
 });
 
 it('should send figure from middle to the back', ()=> {
     state.present.figuresOrder = ['1', '2', '3'];
+    state.present.selectedFigures = ['2'];
 
-    const result = figures(state, FigureActions.sendFigureBack('2'));
+    const result = figures(state, FigureActions.sendFigureBack());
 
     expect(result.present.figuresOrder).toEqual(['1', '3', '2']);
 });
 
 it('should send figure from front to the back', ()=> {
     state.present.figuresOrder = ['1', '2', '3', '4'];
+    state.present.selectedFigures = ['1'];
 
-    const result = figures(state, FigureActions.sendFigureBack('1'));
+    const result = figures(state, FigureActions.sendFigureBack());
 
     expect(result.present.figuresOrder).toEqual(['2', '3', '4', '1']);
 });
 
 it('should do nothing on send figure from back to the back', ()=> {
     state.present.figuresOrder = ['1', '2', '3', '4'];
+    state.present.selectedFigures = ['4'];
 
-    const result = figures(state, FigureActions.sendFigureBack('4'));
+    const result = figures(state, FigureActions.sendFigureBack());
 
     expect(result.present.figuresOrder).toEqual(['1', '2', '3', '4']);
 });
 
-it('should remove delted figure from order', ()=> {
+it('should remove deleted figure from order', ()=> {
     state.present.figuresOrder = ['1', '2', '3', '4'];
     state.present.selectedFigures = ['3'];
     state.present.figuresById['1'] =createSquare();

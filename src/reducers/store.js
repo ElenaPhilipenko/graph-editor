@@ -97,9 +97,13 @@ function figures(state = {
 
         case SEND_FIGURE_FRONT:
         {
-            let figuresOrder = Immutable.List(state.figuresOrder)
-                .delete(state.figuresOrder.indexOf(action.id))
-                .insert(0, action.id).toJS();
+            let figuresOrder = [];
+            state.selectedFigures.forEach(id => {
+                figuresOrder = Immutable.List(state.figuresOrder)
+                    .delete(state.figuresOrder.indexOf(id))
+                    .insert(0, id).toJS();
+            });
+
             return Object.assign({}, state, {
                 figuresOrder: figuresOrder
             });
@@ -107,9 +111,13 @@ function figures(state = {
 
         case SEND_FIGURE_BACK:
         {
-            let figuresOrder = Immutable.List(state.figuresOrder)
-                .delete(state.figuresOrder.indexOf(action.id))
-                .set(state.figuresOrder.length-1, action.id).toJS();
+            let figuresOrder = [];
+            state.selectedFigures.forEach(id => {
+                figuresOrder = Immutable.List(state.figuresOrder)
+                    .delete(state.figuresOrder.indexOf(id))
+                    .set(state.figuresOrder.length - 1, id).toJS();
+            });
+
             return Object.assign({}, state, {
                 figuresOrder: figuresOrder
             });

@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react'
 import {FIGURES} from '../actions/figureActions'
 
-const ToolBar = ({mode, onModeClick, onDelete, onUndo, onRedo, canUndo, canRedo}) => {
+const ToolBar = ({mode, onModeClick, onDelete, onUndo, onRedo, canUndo, canRedo, onFront, onBack}) => {
     return (
         <div>
             <button className={mode !== FIGURES.CIRCLE ? 'btn btn-default': 'btn btn-default active'}
@@ -35,11 +35,11 @@ const ToolBar = ({mode, onModeClick, onDelete, onUndo, onRedo, canUndo, canRedo}
             </button>
 
             <button className={mode !== 'back' ? 'btn btn-default': 'btn btn-default active'}
-                    type="button" onClick={() => onModeClick('back')}>
+                    type="button" onClick={() => onFront()}>
                 <span>front</span>
             </button>
 
-            <button className='btn btn-default' type="button" onClick={() => onModeClick('front')}>
+            <button className='btn btn-default' type="button" onClick={() => onBack()}>
                 <span>back</span>
             </button>
 

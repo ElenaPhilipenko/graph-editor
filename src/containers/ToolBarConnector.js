@@ -16,6 +16,12 @@ const mapDispatchToProps = (dispatch) => {
         onModeClick: (mode) => {
             dispatch(changeMode(mode));
         },
+        onFront: () => {
+            dispatch(FigureActions.sendFigureBack());
+        },
+        onBack: () => {
+            dispatch(FigureActions.sendFigureFront());
+        },
         onDelete: () => {
             dispatch(FigureActions.deleteFigure());
         },

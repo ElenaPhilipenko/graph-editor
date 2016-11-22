@@ -55,12 +55,12 @@ export const FigureActions = {
         return {type: RESIZE_FIGURE, x, y, skip};
     },
 
-    sendFigureBack(id){
-        return {type: SEND_FIGURE_BACK, id}
+    sendFigureBack(){
+        return {type: SEND_FIGURE_BACK}
     },
 
-    sendFigureFront(id){
-        return {type: SEND_FIGURE_FRONT, id}
+    sendFigureFront(){
+        return {type: SEND_FIGURE_FRONT}
     },
 
     deleteFigure () {
